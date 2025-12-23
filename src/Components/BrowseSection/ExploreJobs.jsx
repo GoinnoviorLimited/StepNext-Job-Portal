@@ -5,7 +5,7 @@ const ExploreJobs = () => {
   const [menuData, setMenuData] = useState({});
 
   const linkClass =
-    "block text-sm text-gray-600 hover:text-[#22A7F0] transition";
+    "block text-md text-gray-600 hover:text-[#22A7F0] transition ";
 
   useEffect(() => {
     fetch("/Data/exploreJobsData.json")
@@ -15,12 +15,12 @@ const ExploreJobs = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-10 max-w-7xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 max-w-6xl mx-auto">
       {Object.entries(menuData).map(([section, items]) => (
         <div key={section}>
-          <h3 className="font-semibold mb-4">{section}</h3>
+          <h3 className="font-semibold mb-4 text-xl">{section}</h3>
 
-          <ul className="space-y-2">
+          <ul className="space-y-4">
             {items.map((item, index) => (
               <li
                 key={index}

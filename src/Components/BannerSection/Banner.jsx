@@ -17,8 +17,13 @@ const Banner = () => {
           <Buttons>Get Resume Help</Buttons>
           <Buttons>Get Premium Resume</Buttons>
         </div>
-        <div>
-          <p className="mt-4">A service of indeed</p>
+        <div className="flex items-center justify-center mt-4 gap-1">
+          <p className="mt-1">A service of </p>
+          <img
+            src="https://www.simplyhired.com/next-assets/careerServicesBanner/indeed-logo.webp"
+            alt=""
+            className="w-14"
+          />
         </div>
       </div>
       <div>
@@ -28,7 +33,7 @@ const Banner = () => {
           alt=""
         />
         <img
-          className="absolute top-0 right-0 w-85"
+          className="absolute top-0 right-0 w-86"
           src="https://www.simplyhired.com/next-assets/careerServicesBanner/img-right.webp"
           alt=""
         />
