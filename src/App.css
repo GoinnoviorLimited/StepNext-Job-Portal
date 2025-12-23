@@ -4,6 +4,7 @@
 
 @theme {
   --font-fira: "Fira Sans", sans-serif;
+  --breakpoint-xs: 400px;
 }
 body {
   font-family: var(--font-fira);

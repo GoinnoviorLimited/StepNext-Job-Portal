@@ -24,7 +24,7 @@ const Header = () => {
               <input
                 type="text"
                 placeholder="Job position / Internship"
-                className="input input-ghost outline-1 h-11 w-w-full lg:w-94"
+                className="input input-ghost outline-1 h-11 w-full lg:w-94"
               />
 
               <Buttons className="w-full md:w-auto ">Search Jobs</Buttons>

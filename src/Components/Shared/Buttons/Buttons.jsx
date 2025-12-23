@@ -1,13 +1,14 @@
 import React from "react";
 import { Link } from "react-router";
 
-const Buttons = (props) => {
+const Buttons = ({ to = "#", children, className = "" }) => {
   return (
     <Link
-      to={props.to}
-      className="bg-[#22A7F0] text-white px-6 py-2 rounded-full font-bold cursor-pointer text-lg text-center hover:bg-[#1b8ac4] transition-colors duration-300 inline-block"
+      to={to}
+      className={`bg-[#22A7F0] text-white px-6 py-2 rounded-full font-bold cursor-pointer text-lg text-center hover:bg-[#1b8ac4] transition-colors duration-300 inline-block ${className}`
+}
     >
-      {props.children}
+      {children}
     </Link>
   );
 };
