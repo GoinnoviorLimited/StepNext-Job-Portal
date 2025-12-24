@@ -1,47 +1,119 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router";
 import privacyIcon from "../../assets/privacy.png";
+import { FaChevronDown } from "react-icons/fa";
 
 const Footer = () => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div>
-      <div className=" bg-base-200">
-        <footer className="footer sm:footer-horizontal text-base-content p-10 max-w-5xl mx-auto ">
-          <nav>
-            <h6 className="footer-title capitalize">Job Seeker Tools</h6>
-            <NavLink className="link link-hover">Salary Estimator</NavLink>
-            <NavLink className="link link-hover">Glassdoor Community</NavLink>
-            <p className="mt-10">Country</p>
-            <select
-              defaultValue="Server location"
-              className="select select-neutral outline-0"
-            >
-              <option>Bangladesh</option>
-              <option>North America</option>
-              <option>EU west</option>
-              <option>South East Asia</option>
-            </select>
-          </nav>
-          <nav>
-            <h6 className="footer-title capitalize">Employer Tools</h6>
-            <NavLink className="link link-hover">Post Jobs</NavLink>
-            <NavLink className="link link-hover">Contact</NavLink>
-            <NavLink className="link link-hover">Jobs</NavLink>
-            <NavLink className="link link-hover">Press kit</NavLink>
-          </nav>
-          <nav>
-            <h6 className="footer-title capitalize">Browse</h6>
-            <NavLink className="link link-hover">All Jobs</NavLink>
-            <NavLink className="link link-hover">All Salaries</NavLink>
-            <NavLink className="link link-hover">All Cities</NavLink>
-            <NavLink className="link link-hover">All Companies</NavLink>
-          </nav>
-          <nav>
-            <h6 className="footer-title capitalize">Stay Connected</h6>
-            <NavLink className="link link-hover">Contact Us</NavLink>
-            <NavLink className="link link-hover">Privacy policy</NavLink>
-            <NavLink className="link link-hover">Cookie policy</NavLink>
-          </nav>
+      <div className="bg-base-200 border md:border-0 border-y-black/10 border-x-0">
+        <footer className="max-w-5xl mx-auto px-10">
+          {/* --- MOBILE VIEW: Collapsible Dropdown (Visible only on small screens) --- */}
+          <div className="md:hidden collapse  bg-base-200 ">
+            <input
+              type="checkbox"
+              className="collapse-toggle"
+              onClick={() => setIsOpen(!isOpen)}
+            />
+
+            <div className="collapse-title   flex justify-center items-center gap-2 cursor-pointer">
+              Resources and Tools
+              <FaChevronDown
+                size={14}
+                className={`transition-transform duration-300 ${
+                  isOpen ? "rotate-180" : ""
+                }`}
+              />
+            </div>
+            <div className="collapse-content px-0">
+              <div className="grid grid-cols-2 py-4">
+                <nav className="flex flex-col gap-2">
+                  <h6 className="footer-title opacity-100 text-base-content font-bold capitalize">
+                    Job Seeker Tools
+                  </h6>
+                  <NavLink className="link link-hover text-sm">
+                    Salary Estimator
+                  </NavLink>
+                  <NavLink className="link link-hover text-sm">
+                    Glassdoor Community
+                  </NavLink>
+
+                  <h6 className="footer-title opacity-100 text-base-content font-bold capitalize mt-6">
+                    Employer Tools
+                  </h6>
+                  <NavLink className="link link-hover text-sm">
+                    Post Jobs
+                  </NavLink>
+                </nav>
+
+                <nav className="flex flex-col gap-2">
+                  <h6 className="footer-title opacity-100 text-base-content font-bold capitalize">
+                    Browse
+                  </h6>
+                  <NavLink className="link link-hover text-sm">
+                    All Jobs
+                  </NavLink>
+                  <NavLink className="link link-hover text-sm">
+                    All Salaries
+                  </NavLink>
+                  <NavLink className="link link-hover text-sm">
+                    All Cities
+                  </NavLink>
+                  <NavLink className="link link-hover text-sm">
+                    All Companies
+                  </NavLink>
+
+                  <h6 className="footer-title opacity-100 text-base-content font-bold capitalize mt-6">
+                    Stay Connected
+                  </h6>
+                  <NavLink className="link link-hover text-sm">
+                    Contact Us
+                  </NavLink>
+                </nav>
+              </div>
+            </div>
+          </div>
+
+          {/* --- DESKTOP VIEW: Normal Footer (Hidden on sm, visible on md and up) --- */}
+          <div className="hidden  md:grid grid-cols-4 gap-16 sm:footer sm:footer-horizontal text-base-content py-10">
+            <nav>
+              <h6 className="footer-title capitalize">Job Seeker Tools</h6>
+              <NavLink className="link link-hover">Salary Estimator</NavLink>
+              <NavLink className="link link-hover">Glassdoor Community</NavLink>
+              <p className="mt-10">Country</p>
+              <select
+                defaultValue="Bangladesh"
+                className="select select-neutral outline-0"
+              >
+                <option>Bangladesh</option>
+                <option>North America</option>
+                <option>EU west</option>
+                <option>South East Asia</option>
+              </select>
+            </nav>
+
+            <nav>
+              <h6 className="footer-title capitalize">Employer Tools</h6>
+              <NavLink className="link link-hover">Post Jobs</NavLink>
+              
+            </nav>
+
+            <nav>
+              <h6 className="footer-title capitalize">Browse</h6>
+              <NavLink className="link link-hover">All Jobs</NavLink>
+              <NavLink className="link link-hover">All Salaries</NavLink>
+              <NavLink className="link link-hover">All Cities</NavLink>
+              <NavLink className="link link-hover">All Companies</NavLink>
+            </nav>
+
+            <nav>
+              <h6 className="footer-title capitalize">Stay Connected</h6>
+              <NavLink className="link link-hover">Contact Us</NavLink>
+              <NavLink className="link link-hover">Privacy policy</NavLink>
+              <NavLink className="link link-hover">Cookie policy</NavLink>
+            </nav>
+          </div>
         </footer>
       </div>
       <footer>

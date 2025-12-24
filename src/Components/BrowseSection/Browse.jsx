@@ -7,9 +7,9 @@ const Browse = () => {
   const [open, setOpen] = useState(false);
   return (
     <div className="my-10">
-      <div className="text-center my-6">
+      <div className="text-center my-6 px-4">
         <h2 className="text-2xl  font-bold">Browse StepNext</h2>
-        <p className="max-w-2xl mx-auto">
+        <p className="max-w-2xl mx-auto ">
           Browse StepNext for jobs, view local and national salary information,
           discover companies, and learn about the job market in a specific city.
         </p>
