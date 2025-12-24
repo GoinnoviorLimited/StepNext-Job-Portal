@@ -21,7 +21,7 @@ const Footer = () => {
               Resources and Tools
               <FaChevronDown
                 size={14}
-                className={`transition-transform duration-300 ${
+                className={`transition-transform duration-300  ${
                   isOpen ? "rotate-180" : ""
                 }`}
               />
@@ -96,7 +96,6 @@ const Footer = () => {
             <nav>
               <h6 className="footer-title capitalize">Employer Tools</h6>
               <NavLink className="link link-hover">Post Jobs</NavLink>
-              
             </nav>
 
             <nav>
@@ -116,10 +115,27 @@ const Footer = () => {
           </div>
         </footer>
       </div>
-      <footer>
-        <div className="xs:flex  items-center justify-center max-w-7xl gap-6  mx-auto my-6">
-          <p className="text-3xl font-bold ">StepNext.</p>
-          <div className="flex flex-col items-center">
+      <footer className="px-2">
+        <div className="flex flex-col md:flex-row items-center justify-center max-w-7xl gap-6  mx-auto my-6 ">
+          <div>
+            <a className=" text-4xl md:text-4xl font-bold cursor-pointer flex justify-center">
+              <span className="text-[#22A7F0]">Step</span>Next.
+            </a>
+            <div className="md:hidden">
+              <p className="mt-4 mb-2 text-black/70">Country</p>
+              <select
+                defaultValue="Bangladesh"
+                className="select select-neutral outline-0"
+              >
+                <option>Bangladesh</option>
+                <option>North America</option>
+                <option>EU west</option>
+                <option>South East Asia</option>
+              </select>
+              <p className="text-xs font-semibold mt-6">Take your job search wherever you go.</p>
+            </div>
+          </div>
+          <div className="flex flex-col items-center p-4">
             <p className="text-xs font-semibold">
               &copy; 2025 SH Inc. SimplyHired is part of the Indeed Site, and by
               using SimplyHired you agree to the Indeed{" "}
