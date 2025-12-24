@@ -6,10 +6,10 @@ const Banner = () => {
     <div>
       <div className="bg-slate-400/10 my-20 relative">
         <div
-          className=" md:w-90 py-10 h-60 sm:h-80 md:h-90 md:ml-auto md:mr-20 lg:mx-auto
+          className=" md:w-90 lg:w-120 lg:flex items-center lg:mr-40  py-10 h-60 sm:h-80 md:h-90 md:ml-auto md:mr-20 xl:mx-auto
       "
         >
-          <div className="hidden  md:block text-center">
+          <div className="hidden  md:block text-center w-full ">
             <h2 className="text-lg font-bold ">
               Already have a resume? Create/Get your Industry/Corporate Standard
               CV/Resume through StepNext.
@@ -18,7 +18,7 @@ const Banner = () => {
               Match with a career coach who knows your industry for an expert
               resume review
             </p>
-            <div className="flex flex-col justify-center items-center gap-4 mt-4">
+            <div className="flex flex-col lg:flex-row justify-center items-center gap-4 mt-4 w-full">
               <Buttons className="order-2 lg:order-1">Get Resume Help</Buttons>
               <Buttons className="order-1 lg:order-2">
                 Get Premium Resume
@@ -36,19 +36,19 @@ const Banner = () => {
         </div>
         <div>
           <img
-            className="absolute left-0 bottom-0 w-70 sm:w-95 "
+            className="absolute left-0 bottom-0 w-70 sm:w-100 "
             src="https://www.simplyhired.com/next-assets/careerServicesBanner/img-left.webp"
             alt=""
           />
           <img
-            className="absolute bottom-0 right-0 w-99  hidden lg:block"
+            className="absolute bottom-0 right-0 w-99  hidden xl:block"
             src="https://www.simplyhired.com/next-assets/careerServicesBanner/img-right.webp"
             alt=""
           />
         </div>
       </div>
       <div className="md:hidden">
-        <div className="text-center w-full px-4 xs:w-100 mx-auto -mt-15">
+        <div className="text-center md:w-full px-4 w-100 mx-auto -mt-15">
           <h2 className="text-xl font-bold mb-2">
             Already have a resume? Create/Get your Industry/Corporate Standard
             CV/Resume through StepNext.
@@ -57,8 +57,8 @@ const Banner = () => {
             Match with a career coach who knows your industry for an expert
             resume review
           </p>
-          <div className="flex flex-col md:flex-row justify-center items-center gap-4 mt-4">
-            <Buttons className="order-2 md:order-1">Get Resume Help</Buttons>
+          <div className="flex flex-col md:flex-row justify-center items-center gap-4 mt-4 w-full">
+            <Buttons className="order-2 md:order-1 ">Get Resume Help</Buttons>
             <Buttons className="order-1 md:order-2">Get Premium Resume</Buttons>
           </div>
           <div className="flex items-center justify-center mt-4 gap-1">

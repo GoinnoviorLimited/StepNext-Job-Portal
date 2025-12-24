@@ -7,9 +7,9 @@ const Browse = () => {
   const [open, setOpen] = useState(false);
   return (
     <div className="my-10">
-      <div className="text-center my-6">
+      <div className="text-center my-6 px-4">
         <h2 className="text-2xl  font-bold">Browse StepNext</h2>
-        <p className="max-w-2xl mx-auto">
+        <p className="max-w-2xl mx-auto ">
           Browse StepNext for jobs, view local and national salary information,
           discover companies, and learn about the job market in a specific city.
         </p>
@@ -18,7 +18,9 @@ const Browse = () => {
       <div className="flex justify-center">
         <button
           onClick={() => setOpen(!open)}
-          className="cursor-pointer text-[#22A7F0] hover:bg-slate-400/10 p-2 rounded-md"
+          className={`cursor-pointer text-[#22A7F0] p-3 rounded-md transition-colors duration-300 ${
+            open ? "bg-slate-400/10" : "hover:bg-slate-400/10"
+          }`}
         >
           <FaChevronDown
             size={24}
@@ -30,7 +32,7 @@ const Browse = () => {
       </div>
       {/* Dropdown */}
       {open && (
-        <div className="mt-10 px-6">
+        <div className="mt-10 px-6 ">
           {/* Explore jobs--- */}
           <ExploreJobs />
           <div className="flex flex-col items-center my-10 gap-y-4">

@@ -15,7 +15,7 @@ const ExploreJobs = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 max-w-6xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 max-w-6xl mx-auto ">
       {Object.entries(menuData).map(([section, items]) => (
         <div key={section}>
           <h3 className="font-semibold mb-4 text-xl">{section}</h3>

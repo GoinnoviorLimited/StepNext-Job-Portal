@@ -8,8 +8,8 @@ const Header = () => {
         {/* Search section */}
         <div className="mx-auto mt-16 sm:mt-24 flex flex-col items-center">
           {/* Heading */}
-          <div className="md:w-full lg:w-max">
-            <h2 className="text-2xl sm:text-4xl font-bold mb-6">
+          <div className="w-full md:w-full lg:w-max">
+            <h2 className="text-center md:text-start text-2xl sm:text-4xl font-bold mb-6">
               One Search, Millions of Jobs
             </h2>
 
@@ -27,7 +27,7 @@ const Header = () => {
                 className="input input-ghost outline-1 h-11 w-full lg:w-94"
               />
 
-              <Buttons className="w-full md:w-auto ">Search Jobs</Buttons>
+              <Buttons className="w-full md:w-full lg:w-auto ">Search Jobs</Buttons>
             </div>
           </div>
         </div>

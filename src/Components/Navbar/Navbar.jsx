@@ -11,9 +11,11 @@ const Navbar = () => {
         <div className="drawer-content ">
           {/* Page content here */}
           <div className="bg-base-100 ">
-            <div className="navbar mx-auto max-w-6xl mt-2">
+            <div className="navbar mx-auto px-4 md:px-11 mt-2">
               <div className="flex-1">
-                <a className="text-2xl font-bold">StepNext.</a>
+                <a className=" text-3xl md:text-4xl font-bold cursor-pointer">
+                  <span className="text-[#22A7F0]">Step</span>Next.
+                </a>
               </div>
               <div className=" flex items-center gap-6 justify-center">
                 <NavLink className="xs:flex hidden items-center  gap-2  ">
@@ -23,7 +25,7 @@ const Navbar = () => {
                 <div className="hidden md:block">
                   <NavLink>Sign In / Create Account</NavLink>
                 </div>
-                <label htmlFor="my-drawer-5" className="cursor-pointer">
+                <label htmlFor="my-drawer-5" className="cursor-pointer text-black/50 ">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
