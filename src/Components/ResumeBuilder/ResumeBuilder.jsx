@@ -11,7 +11,6 @@ const ResumeBuilder = ({ onCreateManually }) => {
               Choose how you'd like to create your resume
             </p>
           </div>
-          <Button>Add Category</Button>
           <div className="grid md:grid-cols-2 gap-6">
             {/* Upload Resume Card */}
             <div className="p-8 hover:shadow-lg transition-shadow cursor-not-allowed opacity-60">
