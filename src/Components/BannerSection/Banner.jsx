@@ -19,7 +19,7 @@ const Banner = () => {
               resume review
             </p>
             <div className="flex flex-col lg:flex-row justify-center items-center gap-4 mt-4 w-full">
-              <Buttons className="order-2 lg:order-1">Get Resume Help</Buttons>
+              <Buttons className="order-2 lg:order-1" to="/resumebuilders">Get Resume Help</Buttons>
               <Buttons className="order-1 lg:order-2">
                 Get Premium Resume
               </Buttons>

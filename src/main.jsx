@@ -5,17 +5,18 @@ import App from "./App.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router";
 import Root from "./Layouts/Root/Root.jsx";
 import Home from "./Components/Home/Home.jsx";
+import ResumeBuilder from "./Components/ResumeBuilder/ResumeBuilder.jsx";
 
-const router = createBrowserRouter(
-  [
-    {
-      path: "/", Component: Root,
-      children: [
-        {index: true, Component: Home},
-      ]
-     }
-  ]
-);
+const router = createBrowserRouter([
+  {
+    path: "/",
+    Component: Root,
+    children: [
+      { index: true, Component: Home },
+      { path: "resumebuilders", Component: ResumeBuilder },
+    ],
+  },
+]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
