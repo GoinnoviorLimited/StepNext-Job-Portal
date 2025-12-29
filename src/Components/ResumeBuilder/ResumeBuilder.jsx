@@ -13,7 +13,7 @@ const ResumeBuilder = ({ onCreateManually }) => {
           </div>
           <div className="grid md:grid-cols-2 gap-6">
             {/* Upload Resume Card */}
-            <div className="p-8 hover:shadow-lg transition-shadow cursor-not-allowed opacity-60">
+            <div className="card border border-black/20 p-8  hover:shadow-lg transition-shadow cursor-not-allowed opacity-60">
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 bg-slate-200/30 rounded-lg flex items-center justify-center mb-4">
                   <Upload className="w-6 h-6 text-[#22A7F0]" />
@@ -28,7 +28,7 @@ const ResumeBuilder = ({ onCreateManually }) => {
 
             {/* Create Manually Card */}
             <div
-              className="p-8 hover:shadow-lg transition-shadow cursor-pointer border-2 border-transparent hover:border-[#22A7F0]"
+              className="card p-8 hover:shadow-lg transition-shadow cursor-pointer hover:border-2 border border-black/20  hover:border-[#22A7F0] "
               onClick={onCreateManually}
             >
               <div className="flex flex-col items-center text-center">
