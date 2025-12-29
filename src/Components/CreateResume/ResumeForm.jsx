@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import PersonalInfo from "./PersonalInfo";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
+import Summary from "./Summary";
 
 const tabs = [
   "Personal",
@@ -46,7 +47,10 @@ const ResumeForm = () => {
   return (
     <div>
       <div className="max-w-5xl mx-auto p-6  md:shadow-[0_2px_8px_rgba(0,0,0,0.08)] rounded-xl my-8">
-        <button className="text-md flex justify-center items-center gap-2 cursor-pointer text-black/60 hover:text-black/30" onClick={() => window.history.back()}>
+        <button
+          className="text-md flex justify-center items-center gap-2 cursor-pointer text-black/60 hover:text-black/30"
+          onClick={() => window.history.back()}
+        >
           <span>
             <MdKeyboardArrowLeft size={18} />
           </span>
@@ -75,6 +79,14 @@ const ResumeForm = () => {
           <PersonalInfo
             data={resumeData.personal}
             onSave={(data) => setResumeData((p) => ({ ...p, personal: data }))}
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
+        {activeTab === "Summary" && (
+          <Summary
+            data={resumeData.summary}
+            onSave={(data) => setResumeData((p) => ({ ...p, summary: data }))}
             onValidityChange={setIsValid}
             onSubmitRef={submitRef}
           />
