@@ -26,7 +26,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold">Personal Info</h2>
+      <h2 className="text-xl font-semibold">Personal Information</h2>
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Full Name */}

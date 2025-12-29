@@ -5,10 +5,10 @@ const ResumeBuilder = () => {
   const navigate = useNavigate();
   return (
     <div>
-      <div className="flex items-center justify-center min-h-screen p-4">
+      <div className="flex items-center justify-center max-w-5xl mx-auto md:my-16 my-2 md:mt-12  p-4 py-12 md:shadow-[0_2px_8px_rgba(0,0,0,0.08)] rounded-xl">
         <div className="w-full max-w-4xl">
           <div className="text-center mb-12">
-            <h1 className="mb-2">Resume Builder</h1>
+            <h1 className="mb-2 text-3xl font-bold">Resume Builder</h1>
             <p className="text-gray-500">
               Choose how you'd like to create your resume
             </p>

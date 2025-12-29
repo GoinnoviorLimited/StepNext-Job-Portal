@@ -118,9 +118,12 @@ const Footer = () => {
       <footer className="px-2">
         <div className="flex flex-col md:flex-row items-center justify-center max-w-7xl gap-6  mx-auto my-6 ">
           <div>
-            <a className=" text-4xl md:text-4xl font-bold cursor-pointer flex justify-center">
+            <NavLink
+              to={"/"}
+              className=" text-4xl md:text-4xl font-bold cursor-pointer flex justify-center"
+            >
               <span className="text-[#22A7F0]">Step</span>Next.
-            </a>
+            </NavLink>
             <div className="md:hidden">
               <p className="mt-4 mb-2 text-black/70">Country</p>
               <select
@@ -132,7 +135,9 @@ const Footer = () => {
                 <option>EU west</option>
                 <option>South East Asia</option>
               </select>
-              <p className="text-xs font-semibold mt-6">Take your job search wherever you go.</p>
+              <p className="text-xs font-semibold mt-6">
+                Take your job search wherever you go.
+              </p>
             </div>
           </div>
           <div className="flex flex-col items-center p-4">

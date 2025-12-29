@@ -45,8 +45,14 @@ const ResumeForm = () => {
   };
   return (
     <div>
-      <div className="max-w-5xl mx-auto p-6  shadow-[0_2px_8px_rgba(0,0,0,0.08)] rounded-xl my-8">
-        <h1 className="text-3xl font-bold mb-4">Create Resume</h1>
+      <div className="max-w-5xl mx-auto p-6  md:shadow-[0_2px_8px_rgba(0,0,0,0.08)] rounded-xl my-8">
+        <button className="text-md flex justify-center items-center gap-2 cursor-pointer text-black/60 hover:text-black/30" onClick={() => window.history.back()}>
+          <span>
+            <MdKeyboardArrowLeft size={18} />
+          </span>
+          <span>Back to options</span>
+        </button>
+        <h1 className="text-3xl font-bold my-6">Create Your Resume</h1>
 
         {/* Tabs */}
         <div className="tabs tabs-boxed mb-6 grid grid-cols-4 lg:grid-cols-8 gap-2 ">
@@ -85,14 +91,27 @@ const ResumeForm = () => {
             </div>
           </div>
 
-          <div onClick={next} disabled={!isValid}>
-            <div className="text-sm flex justify-center items-center px-3 py-2 rounded-sm bg-[#22A7F0] hover:bg-[#1fa1e7] text-white  cursor-pointer">
+          <button
+            onClick={next}
+            disabled={!isValid}
+            className="group disabled:cursor-not-allowed"
+          >
+            <div
+              className={`
+                  text-sm flex justify-center items-center px-3 py-2 rounded-sm text-white transition-colors
+                    ${
+                      !isValid
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-[#22A7F0] hover:bg-[#1fa1e7] cursor-pointer"
+                    }
+                    `}
+            >
               Next{" "}
               <span>
                 <MdKeyboardArrowRight size={18} />
               </span>
             </div>
-          </div>
+          </button>
         </div>
       </div>
     </div>
