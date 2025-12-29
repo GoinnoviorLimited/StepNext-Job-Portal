@@ -6,6 +6,7 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import Root from "./Layouts/Root/Root.jsx";
 import Home from "./Components/Home/Home.jsx";
 import ResumeBuilder from "./Components/ResumeBuilder/ResumeBuilder.jsx";
+import ResumeForm from "./Components/CreateResume/ResumeForm.jsx";
 
 const router = createBrowserRouter([
   {
@@ -13,7 +14,14 @@ const router = createBrowserRouter([
     Component: Root,
     children: [
       { index: true, Component: Home },
-      { path: "resumebuilders", Component: ResumeBuilder },
+      {
+        path: "resumebuilders",
+        Component: ResumeBuilder,
+      },
+      {
+        path: "createresume",
+        Component: ResumeForm,
+      },
     ],
   },
 ]);

@@ -1,6 +1,8 @@
 import { FilePen, Upload } from "lucide-react";
+import { useNavigate } from "react-router";
 
-const ResumeBuilder = ({ onCreateManually }) => {
+const ResumeBuilder = () => {
+  const navigate = useNavigate();
   return (
     <div>
       <div className="flex items-center justify-center min-h-screen p-4">
@@ -29,7 +31,7 @@ const ResumeBuilder = ({ onCreateManually }) => {
             {/* Create Manually Card */}
             <div
               className="card p-8 hover:shadow-lg transition-shadow cursor-pointer hover:border-2 border border-black/20  hover:border-[#22A7F0] "
-              onClick={onCreateManually}
+              onClick={() => navigate("/createresume")}
             >
               <div className="flex flex-col items-center text-center">
                 <div className="w-12 h-12 bg-slate-200/30 rounded-lg flex items-center justify-center mb-4">
