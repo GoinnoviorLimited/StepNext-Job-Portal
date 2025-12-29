@@ -19,18 +19,16 @@ const Banner = () => {
               resume review
             </p>
             <div className="flex flex-col lg:flex-row justify-center items-center gap-4 mt-4 w-full">
-              <Buttons className="order-2 lg:order-1" to="/resumebuilders">Get Resume Help</Buttons>
+              <Buttons className="order-2 lg:order-1" to="/resumebuilders">
+                Get Resume Help
+              </Buttons>
               <Buttons className="order-1 lg:order-2">
                 Get Premium Resume
               </Buttons>
             </div>
             <div className="flex items-center justify-center mt-4 gap-1">
-              <p className="mt-1">A service of </p>
-              <img
-                src="https://www.simplyhired.com/next-assets/careerServicesBanner/indeed-logo.webp"
-                alt=""
-                className="w-14"
-              />
+              <p className="">A service of </p>
+              <p className="font-bold">StepNext.</p>
             </div>
           </div>
         </div>
@@ -58,16 +56,14 @@ const Banner = () => {
             resume review
           </p>
           <div className="flex flex-col md:flex-row justify-center items-center gap-4 mt-4 w-full">
-            <Buttons className="order-2 md:order-1 ">Get Resume Help</Buttons>
+            <Buttons className="order-2 md:order-1 " to="/resumebuilders">
+              Get Resume Help
+            </Buttons>
             <Buttons className="order-1 md:order-2">Get Premium Resume</Buttons>
           </div>
           <div className="flex items-center justify-center mt-4 gap-1">
-            <p className="mt-1">A service of </p>
-            <img
-              src="https://www.simplyhired.com/next-assets/careerServicesBanner/indeed-logo.webp"
-              alt=""
-              className="w-14"
-            />
+            <p className="">A service of </p>
+            <p className="font-bold">StepNext.</p>
           </div>
         </div>
       </div>

@@ -13,9 +13,9 @@ const Navbar = () => {
           <div className="bg-base-100 ">
             <div className="navbar mx-auto px-4 md:px-11 mt-2">
               <div className="flex-1">
-                <a className=" text-3xl md:text-4xl font-bold cursor-pointer">
+                <NavLink to={"/"} className=" text-3xl md:text-4xl font-bold cursor-pointer">
                   <span className="text-[#22A7F0]">Step</span>Next.
-                </a>
+                </NavLink>
               </div>
               <div className=" flex items-center gap-6 justify-center">
                 <NavLink className="xs:flex hidden items-center  gap-2  ">
