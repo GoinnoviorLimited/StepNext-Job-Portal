@@ -3,6 +3,11 @@ import PersonalInfo from "./PersonalInfo";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import Summary from "./Summary";
 import { saveResume } from "../../api/resumeApi";
+import Education from "./Education";
+import Experience from "./Experience";
+import Skills from "./Skills";
+import Projects from "./Projects";
+import Certifications from "./Certifications";
 
 const tabs = [
   "Personal",
@@ -100,7 +105,52 @@ const ResumeForm = () => {
             onSubmitRef={submitRef}
           />
         )}
+        {activeTab === "Education" && (
+          <Education
+            data={resumeData.education}
+            onSave={(data) => setResumeData((p) => ({ ...p, education: data }))}
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
+        {activeTab === "Experience" && (
+          <Experience
+            data={resumeData.experience}
+            onSave={(data) =>
+              setResumeData((p) => ({ ...p, experience: data }))
+            }
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
+        {activeTab === "Skills" && (
+          <Skills
+            data={resumeData.skills}
+            onSave={(data) => setResumeData((p) => ({ ...p, skills: data }))}
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
 
+        {activeTab === "Projects" && (
+          <Projects
+            data={resumeData.projects}
+            onSave={(data) => setResumeData((p) => ({ ...p, projects: data }))}
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
+
+        {activeTab === "Certifications" && (
+          <Certifications
+            data={resumeData.certifications}
+            onSave={(data) =>
+              setResumeData((p) => ({ ...p, certifications: data }))
+            }
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
         {/* Navigation */}
         <div className="flex justify-between mt-6">
           <div onClick={prev}>
