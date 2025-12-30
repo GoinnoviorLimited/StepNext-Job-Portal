@@ -8,6 +8,7 @@ import Experience from "./Experience";
 import Skills from "./Skills";
 import Projects from "./Projects";
 import Certifications from "./Certifications";
+import Preview from "./Preview";
 
 const tabs = [
   "Personal",
@@ -151,6 +152,9 @@ const ResumeForm = () => {
             onSubmitRef={submitRef}
           />
         )}
+
+        {activeTab === "Preview" && <Preview data={resumeData} />}
+
         {/* Navigation */}
         <div className="flex justify-between mt-6">
           <div onClick={prev}>
