@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import PersonalInfo from "./PersonalInfo";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import Summary from "./Summary";
+import { saveResume } from "../../api/resumeApi";
 
 const tabs = [
   "Personal",
@@ -17,6 +18,7 @@ const tabs = [
 const ResumeForm = () => {
   const [activeTab, setActiveTab] = useState("Personal");
   const [isValid, setIsValid] = useState(false);
+  const [resumeId, setResumeId] = useState(null);
 
   const submitRef = useRef(null);
   const [resumeData, setResumeData] = useState({
@@ -30,14 +32,21 @@ const ResumeForm = () => {
   });
 
   const next = async () => {
+    let sectionData;
+
     if (submitRef.current) {
-      await submitRef.current();
+      sectionData = await submitRef.current();
     }
 
+    const saved = await saveResume({
+      _id: resumeId,
+      [activeTab.toLowerCase()]: sectionData,
+    });
+
+    if (!resumeId) setResumeId(saved._id);
+
     const i = tabs.indexOf(activeTab);
-    if (i < tabs.length - 1) {
-      setActiveTab(tabs[i + 1]);
-    }
+    if (i < tabs.length - 1) setActiveTab(tabs[i + 1]);
   };
 
   const prev = () => {
@@ -129,5 +138,4 @@ const ResumeForm = () => {
     </div>
   );
 };
-
 export default ResumeForm;
