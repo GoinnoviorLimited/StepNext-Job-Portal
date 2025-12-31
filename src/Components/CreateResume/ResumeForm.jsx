@@ -40,19 +40,33 @@ const ResumeForm = () => {
   const next = async () => {
     let sectionData;
 
+    // Validate & save current tab locally
     if (submitRef.current) {
       sectionData = await submitRef.current();
+      if (!sectionData) return;
     }
 
-    const saved = await saveResume({
-      _id: resumeId,
+    setResumeData((prev) => ({
+      ...prev,
       [activeTab.toLowerCase()]: sectionData,
-    });
+    }));
 
-    if (!resumeId) setResumeId(saved._id);
+    const currentIndex = tabs.indexOf(activeTab);
 
-    const i = tabs.indexOf(activeTab);
-    if (i < tabs.length - 1) setActiveTab(tabs[i + 1]);
+    if (activeTab === "Preview") {
+      const saved = await saveResume({
+        _id: resumeId,
+        ...resumeData,
+        [activeTab.toLowerCase()]: sectionData,
+      });
+
+      if (!resumeId) setResumeId(saved._id);
+
+      alert("Resume saved successfully!");
+      return;
+    }
+
+    setActiveTab(tabs[currentIndex + 1]);
   };
 
   const prev = () => {
@@ -168,23 +182,29 @@ const ResumeForm = () => {
 
           <button
             onClick={next}
-            disabled={!isValid}
+            disabled={!isValid && activeTab !== "Preview"}
             className="group disabled:cursor-not-allowed"
           >
             <div
               className={`
-                  text-sm flex justify-center items-center px-3 py-2 rounded-sm text-white transition-colors
-                    ${
-                      !isValid
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-[#22A7F0] hover:bg-[#1fa1e7] cursor-pointer"
-                    }
-                    `}
+      text-sm flex justify-center items-center gap-1 px-4 py-2 rounded-sm text-white transition-colors
+      ${
+        !isValid && activeTab !== "Preview"
+          ? "bg-gray-400 cursor-not-allowed"
+          : activeTab === "Preview"
+          ? "bg-[#22A7F0] hover:bg-[#1fa1e7] cursor-pointer"
+          : "bg-[#22A7F0] hover:bg-[#1fa1e7] cursor-pointer"
+      }
+    `}
             >
-              Next{" "}
-              <span>
-                <MdKeyboardArrowRight size={18} />
-              </span>
+              {activeTab === "Preview" ? (
+                <>Submit CV</>
+              ) : (
+                <>
+                  Next
+                  <MdKeyboardArrowRight size={18} />
+                </>
+              )}
             </div>
           </button>
         </div>

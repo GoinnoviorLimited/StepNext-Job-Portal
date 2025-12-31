@@ -1,10 +1,11 @@
-export const saveResume = async (resumeData) => {
-  const res = await fetch("http://localhost:3000/userData", {
+const API_URL = "http://localhost:3000";
+
+export const saveResume = async (data) => {
+  const res = await fetch(`${API_URL}/userData`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(resumeData),
+    body: JSON.stringify(data),
   });
 
-  if (!res.ok) throw new Error("Failed to save resume");
   return res.json();
 };
