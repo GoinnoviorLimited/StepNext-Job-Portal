@@ -2,6 +2,13 @@ import { useRef, useState } from "react";
 import PersonalInfo from "./PersonalInfo";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import Summary from "./Summary";
+import { saveResume } from "../../api/resumeApi";
+import Education from "./Education";
+import Experience from "./Experience";
+import Skills from "./Skills";
+import Projects from "./Projects";
+import Certifications from "./Certifications";
+import Preview from "./Preview";
 
 const tabs = [
   "Personal",
@@ -17,6 +24,7 @@ const tabs = [
 const ResumeForm = () => {
   const [activeTab, setActiveTab] = useState("Personal");
   const [isValid, setIsValid] = useState(false);
+  const [resumeId, setResumeId] = useState(null);
 
   const submitRef = useRef(null);
   const [resumeData, setResumeData] = useState({
@@ -30,14 +38,35 @@ const ResumeForm = () => {
   });
 
   const next = async () => {
+    let sectionData;
+
+    // Validate & save current tab locally
     if (submitRef.current) {
-      await submitRef.current();
+      sectionData = await submitRef.current();
+      if (!sectionData) return;
     }
 
-    const i = tabs.indexOf(activeTab);
-    if (i < tabs.length - 1) {
-      setActiveTab(tabs[i + 1]);
+    setResumeData((prev) => ({
+      ...prev,
+      [activeTab.toLowerCase()]: sectionData,
+    }));
+
+    const currentIndex = tabs.indexOf(activeTab);
+
+    if (activeTab === "Preview") {
+      const saved = await saveResume({
+        _id: resumeId,
+        ...resumeData,
+        [activeTab.toLowerCase()]: sectionData,
+      });
+
+      if (!resumeId) setResumeId(saved._id);
+
+      alert("Resume saved successfully!");
+      return;
     }
+
+    setActiveTab(tabs[currentIndex + 1]);
   };
 
   const prev = () => {
@@ -91,6 +120,54 @@ const ResumeForm = () => {
             onSubmitRef={submitRef}
           />
         )}
+        {activeTab === "Education" && (
+          <Education
+            data={resumeData.education}
+            onSave={(data) => setResumeData((p) => ({ ...p, education: data }))}
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
+        {activeTab === "Experience" && (
+          <Experience
+            data={resumeData.experience}
+            onSave={(data) =>
+              setResumeData((p) => ({ ...p, experience: data }))
+            }
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
+        {activeTab === "Skills" && (
+          <Skills
+            data={resumeData.skills}
+            onSave={(data) => setResumeData((p) => ({ ...p, skills: data }))}
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
+
+        {activeTab === "Projects" && (
+          <Projects
+            data={resumeData.projects}
+            onSave={(data) => setResumeData((p) => ({ ...p, projects: data }))}
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
+
+        {activeTab === "Certifications" && (
+          <Certifications
+            data={resumeData.certifications}
+            onSave={(data) =>
+              setResumeData((p) => ({ ...p, certifications: data }))
+            }
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
+
+        {activeTab === "Preview" && <Preview data={resumeData} />}
 
         {/* Navigation */}
         <div className="flex justify-between mt-6">
@@ -105,23 +182,29 @@ const ResumeForm = () => {
 
           <button
             onClick={next}
-            disabled={!isValid}
+            disabled={!isValid && activeTab !== "Preview"}
             className="group disabled:cursor-not-allowed"
           >
             <div
               className={`
-                  text-sm flex justify-center items-center px-3 py-2 rounded-sm text-white transition-colors
-                    ${
-                      !isValid
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-[#22A7F0] hover:bg-[#1fa1e7] cursor-pointer"
-                    }
-                    `}
+      text-sm flex justify-center items-center gap-1 px-4 py-2 rounded-sm text-white transition-colors
+      ${
+        !isValid && activeTab !== "Preview"
+          ? "bg-gray-400 cursor-not-allowed"
+          : activeTab === "Preview"
+          ? "bg-[#22A7F0] hover:bg-[#1fa1e7] cursor-pointer"
+          : "bg-[#22A7F0] hover:bg-[#1fa1e7] cursor-pointer"
+      }
+    `}
             >
-              Next{" "}
-              <span>
-                <MdKeyboardArrowRight size={18} />
-              </span>
+              {activeTab === "Preview" ? (
+                <>Submit CV</>
+              ) : (
+                <>
+                  Next
+                  <MdKeyboardArrowRight size={18} />
+                </>
+              )}
             </div>
           </button>
         </div>
@@ -129,5 +212,4 @@ const ResumeForm = () => {
     </div>
   );
 };
-
 export default ResumeForm;

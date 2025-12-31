@@ -4,21 +4,25 @@ import { useForm } from "react-hook-form";
 const Summary = ({ data, onSave, onValidityChange, onSubmitRef }) => {
   const {
     register,
-    handleSubmit,
+    trigger,
+    getValues,
     formState: { errors, isValid },
   } = useForm({
     defaultValues: data,
     mode: "onChange",
   });
-  // expose submit function to parent
-  useEffect(() => {
-    onSubmitRef.current = handleSubmit((formData) => {
-      onSave(formData);
-      return true;
-    });
-  }, [handleSubmit, onSave, onSubmitRef]);
 
-  // inform parent if form is valid
+  useEffect(() => {
+    onSubmitRef.current = async () => {
+      const valid = await trigger(); //validate form
+      if (!valid) return null;
+
+      const values = getValues(); // get form data
+      onSave(values);
+      return values; 
+    };
+  }, [trigger, getValues, onSave, onSubmitRef]);
+
   useEffect(() => {
     onValidityChange(isValid);
   }, [isValid, onValidityChange]);

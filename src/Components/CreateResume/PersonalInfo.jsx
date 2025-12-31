@@ -4,22 +4,26 @@ import { useForm } from "react-hook-form";
 const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
   const {
     register,
-    handleSubmit,
+    trigger,
+    getValues,
     formState: { errors, isValid },
   } = useForm({
     defaultValues: data,
     mode: "onChange",
   });
 
-  // expose submit function to parent
+  
   useEffect(() => {
-    onSubmitRef.current = handleSubmit((formData) => {
-      onSave(formData);
-      return true;
-    });
-  }, [handleSubmit, onSave, onSubmitRef]);
+    onSubmitRef.current = async () => {
+      const valid = await trigger(); //validate form
+      if (!valid) return null;
 
-  // inform parent if form is valid
+      const values = getValues(); // get form data
+      onSave(values);
+      return values; 
+    };
+  }, [trigger, getValues, onSave, onSubmitRef]);
+
   useEffect(() => {
     onValidityChange(isValid);
   }, [isValid, onValidityChange]);
@@ -38,7 +42,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
           </label>
           <input
             placeholder="John Doe"
-            className="input focus:outline-none w-full"
+            className="input focus:outline-none  w-full"
             {...register("fullName", { required: true })}
           />
           {errors.fullName && (
