@@ -24,8 +24,6 @@ const tabs = [
 const ResumeForm = () => {
   const [activeTab, setActiveTab] = useState("Personal");
   const [isValid, setIsValid] = useState(false);
-  const [resumeId, setResumeId] = useState(null);
-
   const submitRef = useRef(null);
   const [resumeData, setResumeData] = useState({
     personal: {},
@@ -40,29 +38,44 @@ const ResumeForm = () => {
   const next = async () => {
     let sectionData;
 
-    // Validate & save current tab locally
     if (submitRef.current) {
       sectionData = await submitRef.current();
       if (!sectionData) return;
     }
 
-    setResumeData((prev) => ({
-      ...prev,
+    const updatedResume = {
+      ...resumeData,
       [activeTab.toLowerCase()]: sectionData,
-    }));
+    };
+
+    setResumeData(updatedResume);
 
     const currentIndex = tabs.indexOf(activeTab);
 
     if (activeTab === "Preview") {
-      const saved = await saveResume({
-        _id: resumeId,
-        ...resumeData,
-        [activeTab.toLowerCase()]: sectionData,
-      });
+      try {
+        if (!updatedResume.personal?.email) {
+          alert(
+            "Please provide an email address in Personal Information section"
+          );
+          setActiveTab("Personal");
+          return;
+        }
 
-      if (!resumeId) setResumeId(saved._id);
+        const payload = { ...updatedResume };
+        delete payload._id;
 
-      alert("Resume saved successfully!");
+        const saved = await saveResume(payload);
+
+        alert(
+          saved.isNew
+            ? "Resume saved successfully!"
+            : "Resume updated successfully!"
+        );
+      } catch (error) {
+        console.error("Save error:", error);
+        alert(error.message || "Failed to save resume. Please try again.");
+      }
       return;
     }
 
