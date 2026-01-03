@@ -23,7 +23,10 @@ const Navbar = () => {
                   <p>Post Jobs</p>
                 </NavLink>
                 <div className="hidden md:block">
-                  <NavLink>Sign In / Create Account</NavLink>
+                  <div className="flex justify-center items-center gap-6">
+                    <NavLink>Skill - Eco System</NavLink>
+                    <NavLink>Sign In / Create Account</NavLink>
+                  </div>
                 </div>
                 <label htmlFor="my-drawer-5" className="cursor-pointer text-black/50 ">
                   <svg
