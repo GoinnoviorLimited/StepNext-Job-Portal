@@ -7,6 +7,7 @@ import Root from "./Layouts/Root/Root.jsx";
 import Home from "./Components/Home/Home.jsx";
 import ResumeBuilder from "./Components/ResumeBuilder/ResumeBuilder.jsx";
 import ResumeForm from "./Components/CreateResume/ResumeForm.jsx";
+import Templates from "./Components/Resume/ViewTemplates/Templates.jsx";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: "createresume",
         Component: ResumeForm,
+      },
+      {
+        path: "templates",
+        Component: Templates,
       },
     ],
   },
