@@ -1,7 +1,7 @@
 const API_URL =
   window.location.hostname === "localhost"
     ? "http://localhost:3000"
-    : "https://stepnext-jobportal-server.vercel.app";
+    : "https://stepnext-jobportal-server-production.up.railway.app";
 
 export const saveResume = async (data) => {
   try {
@@ -21,7 +21,9 @@ export const saveResume = async (data) => {
     });
 
     if (!response.ok) {
-      throw new Error(`Server is on Sleep, Refresh the Server API! status: ${response.status}`);
+      throw new Error(
+        `Server is on Sleep, Refresh the Server API! status: ${response.status}`
+      );
     }
 
     const result = await response.json();
