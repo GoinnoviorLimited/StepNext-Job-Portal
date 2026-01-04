@@ -180,7 +180,7 @@ const ResumeForm = () => {
           />
         )}
 
-        {activeTab === "Preview" && <Preview data={resumeData} />}
+        {activeTab === "Preview" && <Preview initialData={resumeData} />}
 
         {/* Navigation */}
         <div className="flex justify-between mt-6">
