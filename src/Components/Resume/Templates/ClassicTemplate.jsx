@@ -8,9 +8,45 @@ const ClassicTemplate = ({ data }) => {
         <p className="text-sm">
           {personal?.email} • {personal?.phone} • {personal?.location}
         </p>
-        <p className="text-sm text-blue-600">
-          {personal?.linkedin} • {personal?.github} • {personal?.portfolio}
-        </p>
+        <div className="text-sm text-blue-600 flex justify-center gap-2">
+          {personal?.linkedin && (
+            <a href={personal.linkedin} target="_blank" rel="noopener noreferrer" className="hover:underline">
+              LinkedIn
+            </a>
+          )}
+          {personal?.github && (
+            <>
+              {personal?.linkedin && " • "}
+              <a href={personal.github} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                GitHub
+              </a>
+            </>
+          )}
+          {personal?.portfolio && (
+            <>
+              {(personal?.linkedin || personal?.github) && " • "}
+              <a href={personal.portfolio} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                Portfolio
+              </a>
+            </>
+          )}
+          {personal?.behance && (
+            <>
+              {(personal?.linkedin || personal?.github || personal?.portfolio) && " • "}
+              <a href={personal.behance} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                Behance
+              </a>
+            </>
+          )}
+           {personal?.dribble && (
+            <>
+              {(personal?.linkedin || personal?.github || personal?.portfolio || personal?.behance) && " • "}
+              <a href={personal.dribble} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                Dribble
+              </a>
+            </>
+          )}
+        </div>
       </div>
 
       {summary?.summary && (

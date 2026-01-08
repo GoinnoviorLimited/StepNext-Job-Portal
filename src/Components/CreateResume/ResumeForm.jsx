@@ -9,6 +9,7 @@ import Skills from "./Skills";
 import Projects from "./Projects";
 import Certifications from "./Certifications";
 import Preview from "./Preview";
+import { useLocation } from "react-router";
 
 const tabs = [
   "Personal",
@@ -24,16 +25,44 @@ const tabs = [
 const ResumeForm = () => {
   const [activeTab, setActiveTab] = useState("Personal");
   const [isValid, setIsValid] = useState(false);
+  const location = useLocation();
+  const isNewResume = location.state?.newResume === true;
   const submitRef = useRef(null);
-  const [resumeData, setResumeData] = useState({
-    personal: {},
-    summary: {},
-    education: [],
-    experience: [],
-    skills: {},
-    projects: [],
-    certifications: [],
-  });
+  const [resumeData, setResumeData] = useState(() =>
+    isNewResume
+      ? {
+          personal: {},
+          summary: {},
+          education: [],
+          experience: [],
+          skills: {},
+          projects: [],
+          certifications: [],
+        }
+      : location.state?.resumeData ?? {
+          personal: {},
+          summary: {},
+          education: [],
+          experience: [],
+          skills: {},
+          projects: [],
+          certifications: [],
+        }
+      
+  );
+  
+  const formatUrls = (data) => {
+    const fields = ["linkedin", "github", "behance", "dribble", "portfolio"];
+    const personal = { ...data.personal };
+    
+    fields.forEach(field => {
+      if (personal[field] && personal[field].trim() !== "" && !personal[field].startsWith("http")) {
+        personal[field] = `https://${personal[field]}`;
+      }
+    });
+
+    return { ...data, personal };
+  };
 
   const next = async () => {
     let sectionData;
@@ -43,10 +72,10 @@ const ResumeForm = () => {
       if (!sectionData) return;
     }
 
-    const updatedResume = {
+    const updatedResume = formatUrls({
       ...resumeData,
       [activeTab.toLowerCase()]: sectionData,
-    };
+    });
 
     setResumeData(updatedResume);
 
@@ -86,12 +115,15 @@ const ResumeForm = () => {
     const i = tabs.indexOf(activeTab);
     if (i > 0) setActiveTab(tabs[i - 1]);
   };
+
   return (
     <div>
       <div className="max-w-5xl mx-auto p-6  md:shadow-[0_2px_8px_rgba(0,0,0,0.08)] rounded-xl my-8">
         <button
           className="text-md flex justify-center items-center gap-2 cursor-pointer text-black/60 hover:text-black/30"
-          onClick={() => window.history.back()}
+          onClick={() => {
+            window.history.back();
+          }}
         >
           <span>
             <MdKeyboardArrowLeft size={18} />

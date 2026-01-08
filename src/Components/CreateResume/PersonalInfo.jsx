@@ -62,7 +62,9 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             className="input focus:outline-none w-full"
             {...register("email", { required: true })}
           />
-          {errors.email && <span className="text-error text-sm">Required</span>}
+          {errors.email && (
+            <span className="text-error text-sm">Required</span>
+          )}
         </div>
 
         {/* Phone */}
@@ -77,7 +79,9 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             className="input focus:outline-none w-full"
             {...register("phone", { required: true })}
           />
-          {errors.phone && <span className="text-error text-sm">Required</span>}
+          {errors.phone && (
+            <span className="text-error text-sm">Required</span>
+          )}
         </div>
 
         {/* Address */}
@@ -104,7 +108,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             <span className="label-text font-medium">LinkedIn</span>
           </label>
           <input
-            placeholder="linkedin.com/johndoe"
+            placeholder="https://linkedin.com/johndoe"
             className="input focus:outline-none w-full"
             {...register("linkedin", { required: false })}
           />
@@ -115,7 +119,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             <span className="label-text font-medium">GitHub</span>
           </label>
           <input
-            placeholder="github.com/johndoe"
+            placeholder="https://github.com/johndoe"
             className="input focus:outline-none w-full"
             {...register("github", { required: false })}
           />
@@ -126,7 +130,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             <span className="label-text font-medium">Behance</span>
           </label>
           <input
-            placeholder="behance.net/johndoe"
+            placeholder="https://behance.net/johndoe"
             className="input focus:outline-none w-full"
             {...register("behance", { required: false })}
           />
@@ -139,7 +143,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             <span className="label-text font-medium">Dribble</span>
           </label>
           <input
-            placeholder="dribble.com/johndoe"
+            placeholder="https://dribble.com/johndoe"
             className="input focus:outline-none w-full"
             {...register("dribble", { required: false })}
           />
@@ -150,7 +154,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             <span className="label-text font-medium">Portfolio</span>
           </label>
           <input
-            placeholder="www.johndoe.com"
+            placeholder="https://www.johndoe.com"
             className="input focus:outline-none w-full"
             {...register("portfolio", { required: false })}
           />
