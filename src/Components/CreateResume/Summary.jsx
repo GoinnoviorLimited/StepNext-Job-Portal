@@ -6,22 +6,29 @@ const Summary = ({ data, onSave, onValidityChange, onSubmitRef }) => {
     register,
     trigger,
     getValues,
+    watch,
     formState: { errors, isValid },
   } = useForm({
     defaultValues: data,
     mode: "onChange",
   });
 
+  // Real-time updates
+  useEffect(() => {
+    const subscription = watch((value) => {
+      onSave(value);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, onSave]);
+
   useEffect(() => {
     onSubmitRef.current = async () => {
       const valid = await trigger(); //validate form
       if (!valid) return null;
 
-      const values = getValues(); // get form data
-      onSave(values);
-      return values; 
+      return getValues(); 
     };
-  }, [trigger, getValues, onSave, onSubmitRef]);
+  }, [trigger, getValues, onSubmitRef]);
 
   useEffect(() => {
     onValidityChange(isValid);
