@@ -12,7 +12,6 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
     mode: "onChange",
   });
 
-  
   useEffect(() => {
     onSubmitRef.current = async () => {
       const valid = await trigger(); //validate form
@@ -20,7 +19,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
 
       const values = getValues(); // get form data
       onSave(values);
-      return values; 
+      return values;
     };
   }, [trigger, getValues, onSave, onSubmitRef]);
 
@@ -43,10 +42,12 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
           <input
             placeholder="John Doe"
             className="input focus:outline-none  w-full"
-            {...register("fullName", { required: true })}
+            {...register("fullName", { required: "Required" })}
           />
           {errors.fullName && (
-            <span className="text-error text-sm">Required</span>
+            <span className="text-error text-sm">
+              {errors.fullName.message}
+            </span>
           )}
         </div>
 
@@ -60,10 +61,16 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
           <input
             placeholder="john@example.com"
             className="input focus:outline-none w-full"
-            {...register("email", { required: true })}
+            {...register("email", {
+              required: "Required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email",
+              },
+            })}
           />
           {errors.email && (
-            <span className="text-error text-sm">Required</span>
+            <span className="text-error text-sm">{errors.email.message}</span>
           )}
         </div>
 
@@ -75,12 +82,16 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             </span>
           </label>
           <input
-            placeholder="+880 (17) 123-45627"
+            placeholder="017123-45627"
             className="input focus:outline-none w-full"
-            {...register("phone", { required: true })}
+            {...register("phone", {
+              required: "Required",
+              minLength: { value: 11, message: "Must be 11 characters" },
+              maxLength: { value: 11, message: "Must be 11 characters" },
+            })}
           />
           {errors.phone && (
-            <span className="text-error text-sm">Required</span>
+            <span className="text-error text-sm">{errors.phone.message}</span>
           )}
         </div>
 
@@ -94,10 +105,12 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
           <input
             placeholder="City, State"
             className="input focus:outline-none w-full"
-            {...register("location", { required: true })}
+            {...register("location", { required: "Required" })}
           />
           {errors.location && (
-            <span className="text-error text-sm">Required</span>
+            <span className="text-error text-sm">
+              {errors.location.message}
+            </span>
           )}
         </div>
       </div>
