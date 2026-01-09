@@ -1,4 +1,6 @@
-import { useRef, useState } from "react";
+/* eslint-disable */
+
+import { useEffect, useRef, useState } from "react";
 import PersonalInfo from "./PersonalInfo";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import Summary from "./Summary";
@@ -24,31 +26,21 @@ const tabs = [
 
 const ResumeForm = () => {
   const [activeTab, setActiveTab] = useState("Personal");
+  const [unlockedIdx, setUnlockedIdx] = useState(0);
   const [isValid, setIsValid] = useState(false);
   const location = useLocation();
   const isNewResume = location.state?.newResume === true;
   const submitRef = useRef(null);
   const [resumeData, setResumeData] = useState(() =>
-    isNewResume
-      ? {
-          personal: {},
-          summary: {},
-          education: [],
-          experience: [],
-          skills: {},
-          projects: [],
-          certifications: [],
-        }
-      : location.state?.resumeData ?? {
-          personal: {},
-          summary: {},
-          education: [],
-          experience: [],
-          skills: {},
-          projects: [],
-          certifications: [],
-        }
-      
+    location.state?.resumeData ?? {
+      personal: {},
+      summary: {},
+      education: [],
+      experience: [],
+      skills: {},
+      projects: [],
+      certifications: [],
+    }
   );
   
   const formatUrls = (data) => {
@@ -64,26 +56,40 @@ const ResumeForm = () => {
     return { ...data, personal };
   };
 
-  const next = async () => {
-    let sectionData;
+  useEffect(() => {
+    if (location.state?.autoPreview) {
+      setActiveTab("Preview");
+    }
+  }, [location.state, setActiveTab]);
 
+  // Update unlockedIdx if coming from Auto Preview or already has data
+  useEffect(() => {
+    if (location.state?.autoPreview) {
+      setUnlockedIdx(tabs.length - 1);
+      setActiveTab("Preview");
+    } else if (location.state?.resumeData) {
+      // If we have parsed data (from PDF upload), unlock all tabs so user can check anything
+      setUnlockedIdx(tabs.length - 1);
+    }
+  }, [location.state]);
+
+  const next = async () => {
+    
     if (submitRef.current) {
-      sectionData = await submitRef.current();
+      const sectionData = await submitRef.current();
       if (!sectionData) return;
     }
 
-    const updatedResume = formatUrls({
-      ...resumeData,
-      [activeTab.toLowerCase()]: sectionData,
-    });
-
-    setResumeData(updatedResume);
+    // Format URLs if we are leaving the Personal section
+    if (activeTab === "Personal") {
+      setResumeData(prev => formatUrls(prev));
+    }
 
     const currentIndex = tabs.indexOf(activeTab);
 
     if (activeTab === "Preview") {
       try {
-        if (!updatedResume.personal?.email) {
+        if (!resumeData.personal?.email) {
           alert(
             "Please provide an email address in Personal Information section"
           );
@@ -91,10 +97,13 @@ const ResumeForm = () => {
           return;
         }
 
-        const payload = { ...updatedResume };
+        const payload = { ...resumeData };
         delete payload._id;
 
-        const saved = await saveResume(payload);
+        // Final URL formatting before submission
+        const finalPayload = formatUrls(payload);
+
+        const saved = await saveResume(finalPayload);
 
         alert(
           saved.isNew
@@ -108,12 +117,26 @@ const ResumeForm = () => {
       return;
     }
 
-    setActiveTab(tabs[currentIndex + 1]);
+    const nextIdx = currentIndex + 1;
+    if (nextIdx > unlockedIdx) {
+      setUnlockedIdx(nextIdx);
+    }
+    setActiveTab(tabs[nextIdx]);
   };
 
   const prev = () => {
     const i = tabs.indexOf(activeTab);
     if (i > 0) setActiveTab(tabs[i - 1]);
+  };
+
+  const handleTabClick = (t, index) => {
+    if (index <= unlockedIdx) {
+      // Format URLs if we are leaving the Personal section via tab click
+      if (activeTab === "Personal") {
+        setResumeData(prev => formatUrls(prev));
+      }
+      setActiveTab(t);
+    }
   };
 
   return (
@@ -134,13 +157,16 @@ const ResumeForm = () => {
 
         {/* Tabs */}
         <div className="tabs tabs-boxed mb-6 grid grid-cols-4 lg:grid-cols-8 gap-2 ">
-          {tabs.map((t) => (
+          {tabs.map((t, index) => (
             <button
               key={t}
-              className={`text-xs cursor-default py-2 ${
+              onClick={() => handleTabClick(t, index)}
+              className={`text-xs py-2 transition-all ${
                 activeTab === t
-                  ? "bg-[#22A7F0] rounded-md text-white"
-                  : "bg-[#22A7F0]/10 rounded-md text-black/60"
+                  ? "bg-[#22A7F0] rounded-md text-white cursor-pointer shadow-sm"
+                  : index <= unlockedIdx
+                  ? "bg-[#22A7F0]/20 rounded-md text-black/80 cursor-pointer hover:bg-[#22A7F0]/30"
+                  : "bg-gray-100 rounded-md text-black/30 cursor-not-allowed opacity-60"
               }`}
             >
               {t}
