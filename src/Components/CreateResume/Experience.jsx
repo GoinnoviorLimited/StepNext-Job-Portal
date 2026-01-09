@@ -8,6 +8,7 @@ const Experience = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
     register,
     trigger,
     getValues,
+    watch,
     formState: { isValid },
   } = useForm({
     defaultValues: {
@@ -15,6 +16,14 @@ const Experience = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
     },
     mode: "onChange",
   });
+
+  // Real-time updates
+  useEffect(() => {
+    const subscription = watch((value) => {
+      onSave(value.experience);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, onSave]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -26,11 +35,9 @@ const Experience = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
       const valid = await trigger();
       if (!valid) return null;
 
-      const values = getValues().experience;
-      onSave(values);
-      return values;
+      return getValues().experience;
     };
-  }, [trigger, getValues, onSave, onSubmitRef]);
+  }, [trigger, getValues, onSubmitRef]);
 
   useEffect(() => {
     onValidityChange(isValid);
