@@ -52,7 +52,7 @@ const ClassicTemplate = ({ data }) => {
       {summary?.summary && (
         <>
           <h2 className="font-semibold border-b mb-2">Summary</h2>
-          <p>{summary.summary}</p>
+          <p className="whitespace-pre-wrap">{summary.summary}</p>
         </>
       )}
 
@@ -80,7 +80,7 @@ const ClassicTemplate = ({ data }) => {
                 <p className="font-medium">{ex.position} — {ex.company}</p>
                 <p>{ex.startDate} – {ex.endDate}</p>
               </div>
-              <p>{ex.description}</p>
+              <p className="whitespace-pre-wrap">{ex.description}</p>
             </div>
           ))}
         </>
@@ -97,9 +97,16 @@ const ClassicTemplate = ({ data }) => {
         <>
           <h2 className="font-semibold border-b mt-4 mb-2">Projects</h2>
           {projects.map((p, i) => (
-            <div key={i}>
-              <p className="font-medium">{p.title}</p>
-              <p>{p.description}</p>
+            <div key={i} className="mb-2">
+              <div className="flex justify-between items-center text-sm">
+                <p className="font-medium">{p.title}</p>
+                {p.link && (
+                  <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                    View Project
+                  </a>
+                )}
+              </div>
+              <p className="whitespace-pre-wrap text-[13px]">{p.description}</p>
             </div>
           ))}
         </>
