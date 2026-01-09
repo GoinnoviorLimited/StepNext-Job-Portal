@@ -10,6 +10,7 @@ const Skills = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
     register,
     trigger,
     getValues,
+    watch,
     formState: { isValid },
   } = useForm({
     defaultValues: {
@@ -17,6 +18,14 @@ const Skills = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
     },
     mode: "onChange",
   });
+
+  // Real-time updates
+  useEffect(() => {
+    const subscription = watch((value) => {
+      onSave(value.skills);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, onSave]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -28,11 +37,9 @@ const Skills = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
       const valid = await trigger();
       if (!valid) return null;
 
-      const values = getValues().skills;
-      onSave(values);
-      return values;
+      return getValues().skills;
     };
-  }, [trigger, getValues, onSave, onSubmitRef]);
+  }, [trigger, getValues, onSubmitRef]);
 
   useEffect(() => {
     onValidityChange(isValid);
