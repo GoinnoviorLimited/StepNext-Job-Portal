@@ -6,22 +6,29 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
     register,
     trigger,
     getValues,
+    watch,
     formState: { errors, isValid },
   } = useForm({
     defaultValues: data,
     mode: "onChange",
   });
 
+  // Real-time updates
+  useEffect(() => {
+    const subscription = watch((value) => {
+      onSave(value);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, onSave]);
+
   useEffect(() => {
     onSubmitRef.current = async () => {
       const valid = await trigger(); //validate form
       if (!valid) return null;
 
-      const values = getValues(); // get form data
-      onSave(values);
-      return values;
+      return getValues(); 
     };
-  }, [trigger, getValues, onSave, onSubmitRef]);
+  }, [trigger, getValues, onSubmitRef]);
 
   useEffect(() => {
     onValidityChange(isValid);
@@ -45,9 +52,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             {...register("fullName", { required: "Required" })}
           />
           {errors.fullName && (
-            <span className="text-error text-sm">
-              {errors.fullName.message}
-            </span>
+            <span className="text-error text-sm">{errors.fullName.message}</span>
           )}
         </div>
 
@@ -61,12 +66,12 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
           <input
             placeholder="john@example.com"
             className="input focus:outline-none w-full"
-            {...register("email", {
+            {...register("email", { 
               required: "Required",
               pattern: {
                 value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                message: "Invalid email",
-              },
+                message: "Invalid email"
+              }
             })}
           />
           {errors.email && (
@@ -82,12 +87,16 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             </span>
           </label>
           <input
-            placeholder="017123-45627"
+            placeholder="+880 17123-45627"
             className="input focus:outline-none w-full"
-            {...register("phone", {
+            {...register("phone", { 
               required: "Required",
-              minLength: { value: 11, message: "Must be 11 characters" },
-              maxLength: { value: 11, message: "Must be 11 characters" },
+              validate: (value) => {
+                if (!value) return "Required";
+                const is11Digits = /^\d{11}$/.test(value);
+                const is14WithCode = /^\+880\d{10}$/.test(value);
+                return is11Digits || is14WithCode || "Phone must be 11 digits or 14 characters with +880";
+              }
             })}
           />
           {errors.phone && (
@@ -108,9 +117,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             {...register("location", { required: "Required" })}
           />
           {errors.location && (
-            <span className="text-error text-sm">
-              {errors.location.message}
-            </span>
+            <span className="text-error text-sm">{errors.location.message}</span>
           )}
         </div>
       </div>
