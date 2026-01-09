@@ -1,12 +1,22 @@
 const ClassicTemplate = ({ data }) => {
   const { personal, summary, education, experience, skills, projects, certifications } = data;
 
+  const renderField = (value, className = "") => {
+    if (!value) return null;
+    const isPlaceholder = typeof value === 'string' && value.startsWith("Set ");
+    return (
+      <span className={`${className} ${isPlaceholder ? "text-red-600 font-bold" : ""}`}>
+        {value}
+      </span>
+    );
+  };
+
   return (
     <div className="text-black text-[14px] leading-relaxed">
       <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold">{personal?.fullName}</h1>
+        <h1 className="text-3xl font-bold">{renderField(personal?.fullName)}</h1>
         <p className="text-sm">
-          {personal?.email} • {personal?.phone} • {personal?.location}
+          {renderField(personal?.email)} • {renderField(personal?.phone)} • {renderField(personal?.location)}
         </p>
         <div className="text-sm text-blue-600 flex justify-center gap-2">
           {personal?.linkedin && (
@@ -52,7 +62,7 @@ const ClassicTemplate = ({ data }) => {
       {summary?.summary && (
         <>
           <h2 className="font-semibold border-b mb-2">Summary</h2>
-          <p className="whitespace-pre-wrap">{summary.summary}</p>
+          <p className="whitespace-pre-wrap">{renderField(summary.summary)}</p>
         </>
       )}
 
@@ -60,12 +70,14 @@ const ClassicTemplate = ({ data }) => {
         <>
           <h2 className="font-semibold border-b mt-4 mb-2">Education</h2>
           {education.map((e, i) => (
-            <div key={i} className="flex justify-between">
-              <div>
-                <p className="font-medium">{e.institution}</p>
-                <p>{e.degree} {e.field && `in ${e.field}`}</p>
+            <div key={i} className="mb-2">
+              <div className="flex justify-between">
+                <div>
+                  <p className="font-medium">{renderField(e.institution)}</p>
+                  <p>{renderField(e.degree)} {e.field && `in ${e.field}`}</p>
+                </div>
+                <p>{renderField(e.startDate)} – {renderField(e.endDate)}</p>
               </div>
-              <p>{e.startDate} – {e.endDate}</p>
             </div>
           ))}
         </>
@@ -77,8 +89,8 @@ const ClassicTemplate = ({ data }) => {
           {experience.map((ex, i) => (
             <div key={i} className="mb-2">
               <div className="flex justify-between">
-                <p className="font-medium">{ex.position} — {ex.company}</p>
-                <p>{ex.startDate} – {ex.endDate}</p>
+                <p className="font-medium">{renderField(ex.position)} — {renderField(ex.company)}</p>
+                <p>{renderField(ex.startDate)} – {renderField(ex.endDate)}</p>
               </div>
               <p className="whitespace-pre-wrap">{ex.description}</p>
             </div>
