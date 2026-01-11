@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
+import RichTextEditor from "../Common/RichTextEditor";
 
 const CustomSection = ({ title, data = [], onSave, onValidityChange, onSubmitRef }) => {
   const {
@@ -110,10 +111,16 @@ const CustomSection = ({ title, data = [], onSave, onValidityChange, onSubmitRef
                   <label className="label">
                     <span className="label-text font-medium">Description</span>
                   </label>
-                  <textarea
-                    placeholder="Provide details about this item..."
-                    className="textarea textarea-bordered focus:outline-none w-full h-24"
-                    {...register(`items.${index}.description`)}
+                  <Controller
+                    name={`items.${index}.description`}
+                    control={control}
+                    render={({ field }) => (
+                      <RichTextEditor
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Provide details about this item..."
+                      />
+                    )}
                   />
                 </div>
               </div>
