@@ -142,8 +142,8 @@ const Footer = () => {
           </div>
           <div className="flex flex-col items-center p-4">
             <p className="text-xs font-semibold">
-              &copy; 2025 SH Inc. SimplyHired is part of the Indeed Site, and by
-              using SimplyHired you agree to the Indeed{" "}
+              &copy; 2025 Design & Developed By Goinnovior Limited, all rights
+              reserved to StepNext{" "}
               <NavLink className={"underline text-teal-600/90"}>
                 Terms of Service
               </NavLink>

@@ -6,23 +6,29 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
     register,
     trigger,
     getValues,
+    watch,
     formState: { errors, isValid },
   } = useForm({
     defaultValues: data,
     mode: "onChange",
   });
 
-  
+  // Real-time updates
+  useEffect(() => {
+    const subscription = watch((value) => {
+      onSave(value);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, onSave]);
+
   useEffect(() => {
     onSubmitRef.current = async () => {
       const valid = await trigger(); //validate form
       if (!valid) return null;
 
-      const values = getValues(); // get form data
-      onSave(values);
-      return values; 
+      return getValues(); 
     };
-  }, [trigger, getValues, onSave, onSubmitRef]);
+  }, [trigger, getValues, onSubmitRef]);
 
   useEffect(() => {
     onValidityChange(isValid);
@@ -43,10 +49,10 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
           <input
             placeholder="John Doe"
             className="input focus:outline-none  w-full"
-            {...register("fullName", { required: true })}
+            {...register("fullName", { required: "Required" })}
           />
           {errors.fullName && (
-            <span className="text-error text-sm">Required</span>
+            <span className="text-error text-sm">{errors.fullName.message}</span>
           )}
         </div>
 
@@ -60,9 +66,17 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
           <input
             placeholder="john@example.com"
             className="input focus:outline-none w-full"
-            {...register("email", { required: true })}
+            {...register("email", { 
+              required: "Required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email"
+              }
+            })}
           />
-          {errors.email && <span className="text-error text-sm">Required</span>}
+          {errors.email && (
+            <span className="text-error text-sm">{errors.email.message}</span>
+          )}
         </div>
 
         {/* Phone */}
@@ -73,11 +87,21 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             </span>
           </label>
           <input
-            placeholder="+880 (17) 123-45627"
+            placeholder="+880 17123-45627"
             className="input focus:outline-none w-full"
-            {...register("phone", { required: true })}
+            {...register("phone", { 
+              required: "Required",
+              validate: (value) => {
+                if (!value) return "Required";
+                const is11Digits = /^\d{11}$/.test(value);
+                const is14WithCode = /^\+880\d{10}$/.test(value);
+                return is11Digits || is14WithCode || "Phone must be 11 digits or 14 characters with +880";
+              }
+            })}
           />
-          {errors.phone && <span className="text-error text-sm">Required</span>}
+          {errors.phone && (
+            <span className="text-error text-sm">{errors.phone.message}</span>
+          )}
         </div>
 
         {/* Address */}
@@ -90,10 +114,10 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
           <input
             placeholder="City, State"
             className="input focus:outline-none w-full"
-            {...register("location", { required: true })}
+            {...register("location", { required: "Required" })}
           />
           {errors.location && (
-            <span className="text-error text-sm">Required</span>
+            <span className="text-error text-sm">{errors.location.message}</span>
           )}
         </div>
       </div>
@@ -104,7 +128,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             <span className="label-text font-medium">LinkedIn</span>
           </label>
           <input
-            placeholder="linkedin.com/johndoe"
+            placeholder="https://linkedin.com/johndoe"
             className="input focus:outline-none w-full"
             {...register("linkedin", { required: false })}
           />
@@ -115,7 +139,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             <span className="label-text font-medium">GitHub</span>
           </label>
           <input
-            placeholder="github.com/johndoe"
+            placeholder="https://github.com/johndoe"
             className="input focus:outline-none w-full"
             {...register("github", { required: false })}
           />
@@ -126,7 +150,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             <span className="label-text font-medium">Behance</span>
           </label>
           <input
-            placeholder="behance.net/johndoe"
+            placeholder="https://behance.net/johndoe"
             className="input focus:outline-none w-full"
             {...register("behance", { required: false })}
           />
@@ -139,7 +163,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             <span className="label-text font-medium">Dribble</span>
           </label>
           <input
-            placeholder="dribble.com/johndoe"
+            placeholder="https://dribble.com/johndoe"
             className="input focus:outline-none w-full"
             {...register("dribble", { required: false })}
           />
@@ -150,7 +174,7 @@ const PersonalInfo = ({ data, onSave, onValidityChange, onSubmitRef }) => {
             <span className="label-text font-medium">Portfolio</span>
           </label>
           <input
-            placeholder="www.johndoe.com"
+            placeholder="https://www.johndoe.com"
             className="input focus:outline-none w-full"
             {...register("portfolio", { required: false })}
           />

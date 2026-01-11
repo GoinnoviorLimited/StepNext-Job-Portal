@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
+import RichTextEditor from "../Common/RichTextEditor";
 
 const Education = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
   const {
@@ -8,6 +9,7 @@ const Education = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
     register,
     trigger,
     getValues,
+    watch,
     formState: { isValid, errors },
   } = useForm({
     defaultValues: {
@@ -15,6 +17,14 @@ const Education = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
     },
     mode: "onChange",
   });
+
+  // Real-time updates
+  useEffect(() => {
+    const subscription = watch((value) => {
+      onSave(value.education);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, onSave]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -27,11 +37,9 @@ const Education = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
       const valid = await trigger();
       if (!valid) return null;
 
-      const values = getValues().education;
-      onSave(values);
-      return values;
+      return getValues().education;
     };
-  }, [trigger, getValues, onSave, onSubmitRef]);
+  }, [trigger, getValues, onSubmitRef]);
 
   useEffect(() => {
     onValidityChange(isValid);
@@ -140,11 +148,16 @@ const Education = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
                 Description (Optional)
               </span>
             </label>
-            <textarea
-              placeholder="Relevant coursework, achievements, GPA, etc."
-              className="textarea focus:outline-none w-full"
-              rows={3}
-              {...register(`education.${index}.description`)}
+            <Controller
+              name={`education.${index}.description`}
+              control={control}
+              render={({ field }) => (
+                <RichTextEditor
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Relevant coursework, achievements, GPA, etc."
+                />
+              )}
             />
           </div>
         </div>

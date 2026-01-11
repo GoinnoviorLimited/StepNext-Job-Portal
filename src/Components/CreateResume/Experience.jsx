@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
+import RichTextEditor from "../Common/RichTextEditor";
 
 const Experience = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
   const {
@@ -8,6 +9,7 @@ const Experience = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
     register,
     trigger,
     getValues,
+    watch,
     formState: { isValid },
   } = useForm({
     defaultValues: {
@@ -15,6 +17,14 @@ const Experience = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
     },
     mode: "onChange",
   });
+
+  // Real-time updates
+  useEffect(() => {
+    const subscription = watch((value) => {
+      onSave(value.experience);
+    });
+    return () => subscription.unsubscribe();
+  }, [watch, onSave]);
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -26,11 +36,9 @@ const Experience = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
       const valid = await trigger();
       if (!valid) return null;
 
-      const values = getValues().experience;
-      onSave(values);
-      return values;
+      return getValues().experience;
     };
-  }, [trigger, getValues, onSave, onSubmitRef]);
+  }, [trigger, getValues, onSubmitRef]);
 
   useEffect(() => {
     onValidityChange(isValid);
@@ -134,11 +142,16 @@ const Experience = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
             <label className="label">
               <span className="label-text font-medium">Description</span>
             </label>
-            <textarea
-              rows={4}
-              placeholder="Describe your responsibilities and achievements..."
-              className="textarea focus:outline-none w-full"
-              {...register(`experience.${index}.description`)}
+            <Controller
+              name={`experience.${index}.description`}
+              control={control}
+              render={({ field }) => (
+                <RichTextEditor
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Describe your responsibilities and achievements..."
+                />
+              )}
             />
           </div>
         </div>

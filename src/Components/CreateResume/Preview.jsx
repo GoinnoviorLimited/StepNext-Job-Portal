@@ -1,41 +1,109 @@
 import { useNavigate } from "react-router-dom";
 import ClassicTemplate from "../Resume/Templates/ClassicTemplate";
-import { FaFilePdf, FaFileWord } from "react-icons/fa";
+import { FaFilePdf, FaFileWord, FaMagic } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { enhanceResumeWithAI } from "../../utils/aiUtils";
 
-// import html2pdf from "html2pdf.js";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas-pro";
-
-const Preview = ({ data }) => {
+const Preview = ({ initialData, onSaveResume, onDataUpdate }) => {
   const navigate = useNavigate();
+  const [data, setData] = useState(initialData);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
+
+  useEffect(() => {
+    setData(initialData);
+  }, [initialData]);
 
   /* ================= PDF ================= */
   const downloadPDF = async () => {
-    const element = document.getElementById("element-to-print");
-    if (!element) return;
+    if (!data || isDownloading) return;
 
-    const canvas = await html2canvas(element, {
-      scale: 2,
-      useCORS: true,
-      backgroundColor: "#ffffff",
-    });
+    setIsDownloading(true);
 
-    const imgData = canvas.toDataURL("image/png");
+    try {
+      // Save data to database first (silent save)
+      if (onSaveResume) {
+        const success = await onSaveResume(true);
+        if (!success) {
+          setIsDownloading(false);
+          return; // Stop if saving failed (e.g. no email)
+        }
+      }
+      const timestamp = Date.now();
+      const apiUrl = `https://stepnext-jobportal-server-production.up.railway.app/generate-pdf?timestamp=${timestamp}`;
 
-    const pdf = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4",
-    });
+      console.log("Starting PDF download...");
 
-    const imgProps = pdf.getImageProperties(imgData);
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      const res = await fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache",
+        },
+        body: JSON.stringify(data),
+      });
 
-    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
-    pdf.save(`${data?.personal?.fullName || "resume"}.pdf`);
+      if (!res.ok) {
+        throw new Error(`Server error: ${res.status}`);
+      }
+
+      const blob = await res.blob();
+
+      if (!blob || blob.size === 0) {
+        throw new Error("Empty PDF response");
+      }
+
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+
+      a.download = `${data.personal?.fullName || "resume"}_${Date.now()}.pdf`;
+      a.href = url;
+      a.style.display = "none";
+
+      document.body.appendChild(a);
+      a.click();
+
+      console.log("PDF download initiated successfully");
+
+      // Cleanup
+      setTimeout(() => {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+        setIsDownloading(false); // Reset loading state
+      }, 100);
+    } catch (err) {
+      setIsDownloading(false);
+
+      // Only show alert if it's not a CORS warning (PDF might still download)
+      if (!err.message.includes("Failed to fetch")) {
+        alert(`Failed to download PDF: ${err.message}`);
+      } else {
+        setIsDownloading(false);
+      }
+    } finally {
+      // reseting loading state, whether success or error
+      setIsDownloading(false);
+    }
   };
 
+  /* ================= AI ENHANCE ================= */
+  const handleEnhance = async () => {
+    if (isEnhancing) return;
+    setIsEnhancing(true);
+    try {
+      const enhancedData = await enhanceResumeWithAI(data);
+      if (onDataUpdate) {
+        onDataUpdate(enhancedData);
+      }
+      setData(enhancedData);
+      alert("Resume enhanced successfully with AI!");
+    } catch (error) {
+      alert("Failed to enhance resume: " + error.message);
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
   /* ================= WORD ================= */
 
   return (
@@ -49,8 +117,29 @@ const Preview = ({ data }) => {
           </p>
         </div>
 
-        <button
-          onClick={(e) => {
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleEnhance}
+            disabled={isEnhancing}
+            className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-sm ${
+              isEnhancing
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100"
+            }`}
+          >
+            {isEnhancing ? (
+              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+            ) : (
+              <FaMagic className="text-purple-500" />
+            )}
+            {isEnhancing ? "Enhancing..." : "Enhance with AI"}
+          </button>
+
+          <button
+            onClick={(e) => {
             e.stopPropagation();
             navigate("/templates");
           }}
@@ -71,6 +160,7 @@ const Preview = ({ data }) => {
           </svg>
           Change Template
         </button>
+        </div>
       </div>
 
       {/* A4 PAGE PREVIEW */}
@@ -104,11 +194,45 @@ const Preview = ({ data }) => {
         <button
           type="button"
           onClick={downloadPDF}
-          className="cursor-pointer px-8 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors flex items-center gap-2 shadow-md hover:shadow-lg"
+          disabled={isDownloading}
+          className={`cursor-pointer px-8 py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg  ${
+            isDownloading
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-red-600 hover:bg-red-700 text-white"
+          }`}
         >
-          <FaFilePdf />
-          Download PDF
+          {isDownloading ? (
+            <>
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <span>Generating PDF...</span>
+            </>
+          ) : (
+            <>
+              <FaFilePdf />
+              <span>Download PDF & Submit</span>
+            </>
+          )}
         </button>
+
         {/* <button
           onClick={downloadWord}
           className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors flex items-center gap-2 shadow-md hover:shadow-lg"
