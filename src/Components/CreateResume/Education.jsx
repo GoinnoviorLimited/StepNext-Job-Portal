@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
+import RichTextEditor from "../Common/RichTextEditor";
 
 const Education = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
   const {
@@ -147,11 +148,16 @@ const Education = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
                 Description (Optional)
               </span>
             </label>
-            <textarea
-              placeholder="Relevant coursework, achievements, GPA, etc."
-              className="textarea focus:outline-none w-full"
-              rows={3}
-              {...register(`education.${index}.description`)}
+            <Controller
+              name={`education.${index}.description`}
+              control={control}
+              render={({ field }) => (
+                <RichTextEditor
+                  value={field.value}
+                  onChange={field.onChange}
+                  placeholder="Relevant coursework, achievements, GPA, etc."
+                />
+              )}
             />
           </div>
         </div>
