@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 import { useEffect, useRef, useState } from "react";
 import PersonalInfo from "./PersonalInfo";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
@@ -11,9 +10,12 @@ import Skills from "./Skills";
 import Projects from "./Projects";
 import Certifications from "./Certifications";
 import Preview from "./Preview";
+import Languages from "./Languages";
+import References from "./References";
+import CustomSection from "./CustomSection";
 import { useLocation } from "react-router";
 
-const tabs = [
+const initialTabs = [
   "Personal",
   "Summary",
   "Education",
@@ -21,8 +23,9 @@ const tabs = [
   "Skills",
   "Projects",
   "Certifications",
-  "Preview",
 ];
+
+const finalTabs = ["Preview"];
 
 const ResumeForm = () => {
   const [activeTab, setActiveTab] = useState("Personal");
@@ -31,17 +34,26 @@ const ResumeForm = () => {
   const location = useLocation();
   const isNewResume = location.state?.newResume === true;
   const submitRef = useRef(null);
-  const [resumeData, setResumeData] = useState(() =>
-    location.state?.resumeData ?? {
+  const [resumeData, setResumeData] = useState(() => {
+    const defaultData = {
       personal: {},
       summary: {},
       education: [],
       experience: [],
-      skills: {},
+      skills: [],
       projects: [],
       certifications: [],
-    }
-  );
+      languages: [],
+      references: [],
+      customSections: [],
+    };
+    return { ...defaultData, ...location.state?.resumeData };
+  });
+
+  const [tabs, setTabs] = useState(() => {
+    const customTabs = (location.state?.resumeData?.customSections || []).map(s => s.title);
+    return [...initialTabs, "Languages", "References", ...customTabs, ...finalTabs];
+  });
   
   const formatUrls = (data) => {
     const fields = ["linkedin", "github", "behance", "dribble", "portfolio"];
@@ -68,13 +80,48 @@ const ResumeForm = () => {
       setUnlockedIdx(tabs.length - 1);
       setActiveTab("Preview");
     } else if (location.state?.resumeData) {
-      // If we have parsed data (from PDF upload), unlock all tabs so user can check anything
+      // If we have parsed data (from PDF upload), unlocking all tabs so user can check anything
       setUnlockedIdx(tabs.length - 1);
     }
   }, [location.state]);
 
+  const handleSaveResume = async (silent = false) => {
+    try {
+      if (!resumeData.personal?.email) {
+        if (!silent) {
+          alert("Please provide an email address in Personal Information section");
+          setActiveTab("Personal");
+        }
+        return false;
+      }
+
+      const payload = { ...resumeData };
+      delete payload._id;
+
+      // Final URL formatting before submission
+      const finalPayload = formatUrls(payload);
+
+      const saved = await saveResume(finalPayload);
+
+      if (!silent) {
+        alert(
+          saved.isNew
+            ? "Resume saved successfully!"
+            : "Resume updated successfully!"
+        );
+      }
+      return true;
+    } catch (error) {
+      console.error("Save error:", error);
+      if (!silent) {
+        alert(error.message || "Failed to save resume. Please try again.");
+      }
+      return false;
+    }
+  };
+
   const next = async () => {
-    
+    // We still need to validate before moving forward
     if (submitRef.current) {
       const sectionData = await submitRef.current();
       if (!sectionData) return;
@@ -88,32 +135,7 @@ const ResumeForm = () => {
     const currentIndex = tabs.indexOf(activeTab);
 
     if (activeTab === "Preview") {
-      try {
-        if (!resumeData.personal?.email) {
-          alert(
-            "Please provide an email address in Personal Information section"
-          );
-          setActiveTab("Personal");
-          return;
-        }
-
-        const payload = { ...resumeData };
-        delete payload._id;
-
-        // Final URL formatting before submission
-        const finalPayload = formatUrls(payload);
-
-        const saved = await saveResume(finalPayload);
-
-        alert(
-          saved.isNew
-            ? "Resume saved successfully!"
-            : "Resume updated successfully!"
-        );
-      } catch (error) {
-        console.error("Save error:", error);
-        alert(error.message || "Failed to save resume. Please try again.");
-      }
+      await handleSaveResume();
       return;
     }
 
@@ -156,7 +178,7 @@ const ResumeForm = () => {
         <h1 className="text-3xl font-bold my-6">Create Your Resume</h1>
 
         {/* Tabs */}
-        <div className="tabs tabs-boxed mb-6 grid grid-cols-4 lg:grid-cols-8 gap-2 ">
+        <div className="tabs tabs-boxed mb-6 grid grid-cols-4 lg:grid-cols-8 gap-2 items-center">
           {tabs.map((t, index) => (
             <button
               key={t}
@@ -172,6 +194,25 @@ const ResumeForm = () => {
               {t}
             </button>
           ))}
+          <button
+            onClick={() => {
+              const sectionName = prompt("Enter Custom Section Name:");
+              if (sectionName && !tabs.includes(sectionName)) {
+                setResumeData(prev => ({
+                  ...prev,
+                  customSections: [...prev.customSections, { title: sectionName, items: [] }]
+                }));
+                const newTabs = [...tabs];
+                newTabs.splice(tabs.length - 1, 0, sectionName);
+                setTabs(newTabs);
+                setActiveTab(sectionName);
+                setUnlockedIdx(newTabs.indexOf(sectionName));
+              }
+            }}
+            className="text-xs py-2 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-all font-semibold"
+          >
+            + Add Custom
+          </button>
         </div>
 
         {/* Sections */}
@@ -238,7 +279,52 @@ const ResumeForm = () => {
           />
         )}
 
-        {activeTab === "Preview" && <Preview initialData={resumeData} />}
+        {activeTab === "Languages" && (
+          <Languages
+            data={resumeData.languages}
+            onSave={(data) =>
+              setResumeData((p) => ({ ...p, languages: data }))
+            }
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
+
+        {activeTab === "References" && (
+          <References
+            data={resumeData.references}
+            onSave={(data) =>
+              setResumeData((p) => ({ ...p, references: data }))
+            }
+            onValidityChange={setIsValid}
+            onSubmitRef={submitRef}
+          />
+        )}
+
+        {resumeData.customSections.map((section, idx) => (
+          activeTab === section.title && (
+            <CustomSection
+              key={idx}
+              title={section.title}
+              data={section.items}
+              onSave={(items) => {
+                const newSections = [...resumeData.customSections];
+                newSections[idx] = { ...newSections[idx], items };
+                setResumeData(p => ({ ...p, customSections: newSections }));
+              }}
+              onValidityChange={setIsValid}
+              onSubmitRef={submitRef}
+            />
+          )
+        ))}
+
+        {activeTab === "Preview" && (
+          <Preview 
+            initialData={resumeData} 
+            onSaveResume={handleSaveResume} 
+            onDataUpdate={(updatedData) => setResumeData(updatedData)}
+          />
+        )}
 
         {/* Navigation */}
         <div className="flex justify-between mt-6">
