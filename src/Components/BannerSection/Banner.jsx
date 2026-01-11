@@ -7,13 +7,13 @@ const Banner = () => {
     <div>
       <div className="bg-slate-400/10 my-20 relative">
         <div
-          className=" md:w-90 lg:w-120 lg:flex items-center lg:mr-40  py-10 h-60 sm:h-80 md:h-90 md:ml-auto md:mr-20 xl:mx-auto
+          className=" md:w-100 lg:w-120 xl:w-130 lg:flex items-center lg:mr-40  py-10 h-60 sm:h-80 md:h-90 md:ml-auto md:mr-20 xl:mx-auto
       "
         >
           <div className="hidden  md:block text-center w-full ">
-            <h2 className="text-lg font-bold ">
-              Already have a resume? Create/Get your Industry/Corporate Standard
-              CV/Resume through StepNext.
+            <h2 className="text-2xl font-bold ">
+              Already have a resume? Create/Get your Corporate Standard
+              Resume through StepNext.
             </h2>
             <p>
               Match with a career coach who knows your industry for an expert
@@ -48,7 +48,7 @@ const Banner = () => {
             alt=""
           />
           <img
-            className="absolute bottom-0 right-0 w-99  hidden xl:block"
+            className="absolute bottom-0 -right-5 w-99  hidden xl:block"
             src="https://www.simplyhired.com/next-assets/careerServicesBanner/img-right.webp"
             alt=""
           />
