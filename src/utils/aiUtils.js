@@ -24,7 +24,11 @@ export const enhanceResumeWithAI = async (resumeData) => {
     1.  **Professional Summary**: Rewrite the summary to be compelling, concise, and focused on key achievements and skills.
     2.  **Experience Descriptions**: Improve each experience description. Use powerful action verbs (e.g., "Spearheaded", "Optimized", "Architected"), quantify achievements where possible, and ensure the tone is professional.
     3.  **Project Descriptions**: Enhance project descriptions to highlight technical complexity, problem-solving, and results.
-    4.  **Formatting**: Maintain structural line breaks (each point on a new line starting with a dash "-").
+    4.  **Formatting & HTML**:
+        - **Project Descriptions**: You MUST structure these as a bulleted list using <ul> and <li> tags. Every key feature, task, or technology used must be its own bullet point.
+        - **Summary & Experience**: Use ONLY plain text paragraphs for these sections. Do NOT use <ul>, <li>, or any other list tags.
+        - **Plain Text Fields**: Keep all other fields (like "personal" info, "skills", "titles") as RAW PLAIN TEXT without any HTML.
+        - **No Bolding**: Do NOT use <strong> or any other styling tags. Force a clean, standard look.
     5.  **Data Integrity**: Do NOT change factual information like company names, institutions, dates, or contact info. ONLY enhance the descriptive text (summary and descriptions).
     6.  **Missing Data**: If a section is empty or has placeholders like "Set Summary", generate a high-quality professional default based on the rest of the resume's context (skills, education, etc.).
     7.  **Languages**: If the languages array is empty or missing, you MUST add exactly one entry: { "name": "English", "proficiency": "Basic" }.
