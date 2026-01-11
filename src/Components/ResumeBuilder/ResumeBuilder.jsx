@@ -5,6 +5,7 @@ import * as pdfjsLib from "pdfjs-dist";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.mjs?url";
 import { saveResume } from "../../api/resumeApi";
 
+// Configure PDF.js worker locally for Vite Compatibility
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const ResumeBuilder = () => {
@@ -28,6 +29,7 @@ const ResumeBuilder = () => {
       // Extract text content with line break detection
       const textContent = await page.getTextContent();
       const items = textContent.items;
+      
       
       items.sort((a, b) => {
         if (Math.abs(a.transform[5] - b.transform[5]) > 2) {
@@ -79,6 +81,7 @@ const ResumeBuilder = () => {
       throw new Error("The resume text seems too short or empty. Please try another PDF.");
     }
 
+    // Using Groq API (VITE_GROQ_API_KEY  in .env)
     const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
     
     if (!API_KEY) {
@@ -92,12 +95,14 @@ const ResumeBuilder = () => {
       Critical Instructions:
       - **EDUCATION PRECISION**: When extracting education, separate the degree (e.g., "B.Sc.", "Bachelor") from the field of study (e.g., "Computer Science"). Do NOT repeat the field in both fields.
       - **NO GLUED SENTENCES**: Do NOT merge separate sentences or paragraphs into a single line without proper spacing or line breaks. If two blocks of text are distinct in the PDF, keep them distinct in the JSON.
-      - **LIST RECONSTRUCTION**: Identify lists, sub-sections, or bullet points in the text. Every distinct achievement, feature, or responsibility MUST start on its own line with a dash (-).
-      - **BULLET FORMATTING**: 
-        - If the text uses roman numerals (e.g., i., ii., iii.) or numbers (e.g., 1., 2., 3.), **preserve them exactly**.
-        - For ALL OTHER list items, achievements, features, or responsibilities (even if they have no symbol in the PDF), you MUST start the line with a single dash (-) followed by a space.
-        - NEVER collapse multiple points into a single paragraph. Each point must be a separate line starting with a dash (-).
-      - **FORCE NEW LINES**: Every achievement, responsibility, or key feature MUST start on its own line. Do NOT collapse multi-point lists into a single line or paragraph.
+      - **LIST RECONSTRUCTION**: 
+        - **Summary & Experience**: You MUST format these as clean text paragraphs. Do NOT use any <ul>, <li>, or list formatting.
+        - **Projects**: You MUST structure these as bulleted lists using <ul> and <li> tags. Every distinct project feature, task, or achievement must be its own bullet.
+      - **HTML vs PLAIN TEXT**: 
+        - Use HTML tags (<ul>, <li>) ONLY for Projects.
+        - Summary and Experience must be returned as plain text paragraphs with NO tags.
+        - ALL OTHER fields (fullName, location, etc.) MUST be PLAIN TEXT.
+        - Do NOT use <strong> or any other styling tags.
       - **MISSING DATA HANDLING**: If a required field is missing from the PDF, use the following placeholders:
         - "location" -> "Set Location"
         - "phone" -> "Set Phone"
@@ -143,7 +148,7 @@ const ResumeBuilder = () => {
           "field": "string", 
           "startDate": "string (format: MM/YYYY)", 
           "endDate": "string (format: MM/YYYY or 'Present')", 
-          "description": "string (FULL detailed description with structural line breaks, excluding links/labels)" 
+          "description": "string (FULL detailed description with HTML tags for lists (<ul>, <li>), excluding links/labels)" 
         }],
         "experience": [{ 
           "company": "string", 
@@ -151,7 +156,7 @@ const ResumeBuilder = () => {
           "location": "string", 
           "startDate": "string (format: MM/YYYY)", 
           "endDate": "string (format: MM/YYYY or 'Present')", 
-          "description": "string (FULL detailed description with structural line breaks, excluding links/labels)" 
+          "description": "string (FULL detailed description with HTML tags for lists (<ul>, <li>), excluding links/labels)" 
         }],
         "skills": [{ 
           "title": "string (e.g., 'Languages')", 
@@ -160,7 +165,7 @@ const ResumeBuilder = () => {
         "projects": [{ 
           "title": "string", 
           "link": "string (Exact URL found in doc)", 
-          "description": "string (FULL detailed description with structural line breaks, excluding links/labels)" 
+          "description": "string (FULL detailed description with HTML tags for lists (<ul>, <li>), excluding links/labels)" 
         }],
         "certifications": [{ 
           "name": "string", 
