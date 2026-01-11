@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import ClassicTemplate from "../Resume/Templates/ClassicTemplate";
-import { FaFilePdf, FaFileWord } from "react-icons/fa";
+import { FaFilePdf, FaFileWord, FaMagic } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import { enhanceResumeWithAI } from "../../utils/aiUtils";
 
-const Preview = ({ initialData }) => {
+const Preview = ({ initialData, onSaveResume, onDataUpdate }) => {
   const navigate = useNavigate();
   const [data, setData] = useState(initialData);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isEnhancing, setIsEnhancing] = useState(false);
 
   useEffect(() => {
     setData(initialData);
@@ -19,6 +21,14 @@ const Preview = ({ initialData }) => {
     setIsDownloading(true);
 
     try {
+      // Save data to database first (silent save)
+      if (onSaveResume) {
+        const success = await onSaveResume(true);
+        if (!success) {
+          setIsDownloading(false);
+          return; // Stop if saving failed (e.g. no email)
+        }
+      }
       const timestamp = Date.now();
       const apiUrl = `https://stepnext-jobportal-server-production.up.railway.app/generate-pdf?timestamp=${timestamp}`;
 
@@ -76,6 +86,24 @@ const Preview = ({ initialData }) => {
       setIsDownloading(false);
     }
   };
+
+  /* ================= AI ENHANCE ================= */
+  const handleEnhance = async () => {
+    if (isEnhancing) return;
+    setIsEnhancing(true);
+    try {
+      const enhancedData = await enhanceResumeWithAI(data);
+      if (onDataUpdate) {
+        onDataUpdate(enhancedData);
+      }
+      setData(enhancedData);
+      alert("Resume enhanced successfully with AI!");
+    } catch (error) {
+      alert("Failed to enhance resume: " + error.message);
+    } finally {
+      setIsEnhancing(false);
+    }
+  };
   /* ================= WORD ================= */
 
   return (
@@ -89,8 +117,29 @@ const Preview = ({ initialData }) => {
           </p>
         </div>
 
-        <button
-          onClick={(e) => {
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleEnhance}
+            disabled={isEnhancing}
+            className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-sm ${
+              isEnhancing
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100"
+            }`}
+          >
+            {isEnhancing ? (
+              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+            ) : (
+              <FaMagic className="text-purple-500" />
+            )}
+            {isEnhancing ? "Enhancing..." : "Enhance with AI"}
+          </button>
+
+          <button
+            onClick={(e) => {
             e.stopPropagation();
             navigate("/templates");
           }}
@@ -111,6 +160,7 @@ const Preview = ({ initialData }) => {
           </svg>
           Change Template
         </button>
+        </div>
       </div>
 
       {/* A4 PAGE PREVIEW */}
@@ -178,7 +228,7 @@ const Preview = ({ initialData }) => {
           ) : (
             <>
               <FaFilePdf />
-              <span>Download PDF</span>
+              <span>Download PDF & Submit</span>
             </>
           )}
         </button>
