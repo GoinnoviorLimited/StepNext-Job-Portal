@@ -1,5 +1,16 @@
 const ClassicTemplate = ({ data }) => {
-  const { personal, summary, education, experience, skills, projects, certifications } = data;
+  const { 
+    personal, 
+    summary, 
+    education, 
+    experience, 
+    skills, 
+    projects, 
+    certifications, 
+    languages, 
+    references, 
+    customSections 
+  } = data;
 
   const renderField = (value, className = "") => {
     if (!value) return null;
@@ -101,9 +112,17 @@ const ClassicTemplate = ({ data }) => {
       {skills?.length > 0 && (
         <>
           <h2 className="font-semibold border-b mt-4 mb-2">Skills</h2>
-          <p>{skills.map(s => s.name).join(", ")}</p>
+          <div className="space-y-1">
+            {skills.map((s, i) => (
+              <p key={i}>
+                <span className="font-semibold">{s.title}:</span> {s.name}
+              </p>
+            ))}
+          </div>
         </>
       )}
+
+      
 
       {projects?.length > 0 && (
         <>
@@ -124,12 +143,54 @@ const ClassicTemplate = ({ data }) => {
         </>
       )}
 
+      {customSections?.map((section, i) => (
+        section.items?.length > 0 && (
+          <div key={i}>
+            <h2 className="font-semibold border-b mt-4 mb-2">{section.title}</h2>
+            {section.items.map((item, j) => (
+              <div key={j} className="mb-2">
+                <p className="font-medium">{item.title}</p>
+                <p className="whitespace-pre-wrap text-[13px]">{item.description}</p>
+              </div>
+            ))}
+          </div>
+        )
+      ))}
+
       {certifications?.length > 0 && (
         <>
           <h2 className="font-semibold border-b mt-4 mb-2">Certifications</h2>
           {certifications.map((c, i) => (
             <p key={i}>{c.name} — {c.organization}</p>
           ))}
+        </>
+      )}
+
+      {languages?.length > 0 && (
+        <>
+          <h2 className="font-semibold border-b mt-4 mb-2">Languages</h2>
+          <div className="flex flex-wrap gap-x-4">
+            {languages.map((l, i) => (
+              <p key={i}>
+                <span className="font-semibold">{l.name}:</span> {l.proficiency}
+              </p>
+            ))}
+          </div>
+        </>
+      )}
+
+      {references?.length > 0 && (
+        <>
+          <h2 className="font-semibold border-b mt-4 mb-2">References</h2>
+          <div className="grid md:grid-cols-2 gap-4 mt-2">
+            {references.map((r, i) => (
+              <div key={i}>
+                <p className="font-medium">{r.name}</p>
+                <p className="text-sm">{r.company}</p>
+                <p className="text-sm text-gray-600">{r.contact}</p>
+              </div>
+            ))}
+          </div>
         </>
       )}
     </div>

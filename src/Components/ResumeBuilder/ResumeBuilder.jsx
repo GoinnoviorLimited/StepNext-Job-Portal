@@ -112,6 +112,10 @@ const ResumeBuilder = () => {
       - **SECTION CLASSIFICATION**: Carefully distinguish between "Professional Experience" (jobs, internships) and "Projects" (personal, academic, or open source). 
       - **NO MISCLASSIFICATION**: Do NOT put personal or academic projects into the "experience" section. If a project has a title but no formal company/employer, it belongs in "projects".
       - **STRICT EXPERIENCE**: Only populate the "experience" array if the document has a clear "Work Experience", "Professional History", or "Employment" section. If no such section exists, return "experience": [].
+      - **SKILLS CATEGORIZATION**: Group skills into logical categories (e.g., "Languages", "Frameworks", "Tools", "Data Science"). 
+      - **SKILLS STRUCTURE**: Each skill entry MUST be an object with:
+        - "title": The category name (e.g., "Front End").
+        - "name": The list of skills in that category, separated by commas (e.g., "HTML, CSS, React").
       - Extract the FULL, detailed descriptions for each entry in education, experience, and projects.
       - PRESERVE FORMATTING: Maintain the structural line breaks and paragraph breaks found in the text.
       - CLEAN DESCRIPTIONS: Do NOT include URLs or link-related text (e.g., "Live link", "GitHub Link") inside the "description" fields.
@@ -149,7 +153,10 @@ const ResumeBuilder = () => {
           "endDate": "string (format: MM/YYYY or 'Present')", 
           "description": "string (FULL detailed description with structural line breaks, excluding links/labels)" 
         }],
-        "skills": [{ "name": "string" }],
+        "skills": [{ 
+          "title": "string (e.g., 'Languages')", 
+          "name": "string (e.g., 'JavaScript, Python')" 
+        }],
         "projects": [{ 
           "title": "string", 
           "link": "string (Exact URL found in doc)", 
