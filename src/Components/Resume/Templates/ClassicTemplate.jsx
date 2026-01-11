@@ -22,8 +22,42 @@ const ClassicTemplate = ({ data }) => {
     );
   };
 
+  const renderHTML = (html, className = "") => {
+    if (!html) return null;
+    const isPlaceholder = typeof html === 'string' && html.startsWith("Set ");
+    if (isPlaceholder) return renderField(html, className);
+
+    return (
+      <div 
+        className={`html-content ${className}`}
+        dangerouslySetInnerHTML={{ __html: html }}
+      />
+    );
+  };
+
   return (
     <div className="text-black text-[14px] leading-relaxed">
+      <style>{`
+        .html-content {
+          overflow-wrap: break-word;
+        }
+        .html-content p {
+          margin-bottom: 0.125rem;
+        }
+        .html-content ul, .html-content ol {
+          margin-bottom: 0.25rem;
+          padding-left: 1.25rem;
+        }
+        .html-content ul {
+          list-style-type: disc;
+        }
+        .html-content ol {
+          list-style-type: decimal;
+        }
+        .html-content li {
+          margin-bottom: 0.125rem;
+        }
+      `}</style>
       <div className="text-center mb-6">
         <h1 className="text-3xl font-bold">{renderField(personal?.fullName)}</h1>
         <p className="text-sm">
@@ -73,7 +107,7 @@ const ClassicTemplate = ({ data }) => {
       {summary?.summary && (
         <>
           <h2 className="font-semibold border-b mb-2">Summary</h2>
-          <p className="whitespace-pre-wrap">{renderField(summary.summary)}</p>
+          {renderHTML(summary.summary)}
         </>
       )}
 
@@ -99,11 +133,11 @@ const ClassicTemplate = ({ data }) => {
           <h2 className="font-semibold border-b mt-4 mb-2">Experience</h2>
           {experience.map((ex, i) => (
             <div key={i} className="mb-2">
-              <div className="flex justify-between">
-                <p className="font-medium">{renderField(ex.position)} — {renderField(ex.company)}</p>
+              <div className="flex justify-between font-medium">
+                <p>{renderField(ex.position)} — {renderField(ex.company)}</p>
                 <p>{renderField(ex.startDate)} – {renderField(ex.endDate)}</p>
               </div>
-              <p className="whitespace-pre-wrap">{ex.description}</p>
+              {renderHTML(ex.description, "text-[13px]")}
             </div>
           ))}
         </>
@@ -130,14 +164,14 @@ const ClassicTemplate = ({ data }) => {
           {projects.map((p, i) => (
             <div key={i} className="mb-2">
               <div className="flex justify-between items-center text-sm">
-                <p className="font-medium">{p.title}</p>
+                <p className="font-medium">{i + 1}. {renderField(p.title)}</p>
                 {p.link && (
                   <a href={p.link} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
                     View Project
                   </a>
                 )}
               </div>
-              <p className="whitespace-pre-wrap text-[13px]">{p.description}</p>
+              {renderHTML(p.description, "text-[13px]")}
             </div>
           ))}
         </>
@@ -150,7 +184,7 @@ const ClassicTemplate = ({ data }) => {
             {section.items.map((item, j) => (
               <div key={j} className="mb-2">
                 <p className="font-medium">{item.title}</p>
-                <p className="whitespace-pre-wrap text-[13px]">{item.description}</p>
+                {renderHTML(item.description, "text-[13px]")}
               </div>
             ))}
           </div>
