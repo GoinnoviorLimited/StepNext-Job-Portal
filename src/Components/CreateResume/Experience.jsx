@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
 import RichTextEditor from "../Common/RichTextEditor";
+import MonthYearPicker from "../Common/MonthYearPicker";
 
 const Experience = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
   const {
@@ -118,10 +119,16 @@ const Experience = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
               <label className="label">
                 <span className="label-text font-medium">Start Date</span>
               </label>
-              <input
-                placeholder="MM/YYYY"
-                className="input focus:outline-none w-full"
-                {...register(`experience.${index}.startDate`)}
+              <Controller
+                name={`experience.${index}.startDate`}
+                control={control}
+                render={({ field }) => (
+                  <MonthYearPicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    placeholder="Select start date"
+                  />
+                )}
               />
             </div>
 
@@ -129,10 +136,34 @@ const Experience = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
               <label className="label">
                 <span className="label-text font-medium">End Date</span>
               </label>
-              <input
-                placeholder="MM/YYYY or Present"
-                className="input focus:outline-none w-full"
-                {...register(`experience.${index}.endDate`)}
+              <Controller
+                name={`experience.${index}.endDate`}
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <MonthYearPicker
+                      value={field.value}
+                      onChange={field.onChange}
+                      placeholder="Select end date"
+                      disabled={field.value === "Present"}
+                    />
+                    <label className="label cursor-pointer justify-start gap-2 mt-2">
+                      <input
+                        type="checkbox"
+                        className="checkbox checkbox-sm"
+                        checked={field.value === "Present"}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            field.onChange("Present");
+                          } else {
+                            field.onChange("");
+                          }
+                        }}
+                      />
+                      <span className="label-text">Present</span>
+                    </label>
+                  </>
+                )}
               />
             </div>
           </div>
