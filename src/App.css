@@ -8,4 +8,5 @@
 }
 body {
   font-family: var(--font-fira);
+  overflow-x: hidden;
 }

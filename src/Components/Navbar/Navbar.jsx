@@ -1,11 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaBriefcase } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { NavLink } from "react-router";
+import { useAuth } from "../../contexts/AuthContext";
+import ProfileDropdown from "../Auth/ProfileDropdown";
+import SignInModal from "../Auth/SignInModal";
 
 const Navbar = () => {
+  const { currentUser, logout } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleSignOut = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Failed to log out", error);
+    }
+  };
+
   return (
     <div>
+      <SignInModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      
       <div className="drawer drawer-end">
         <input id="my-drawer-5" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content ">
@@ -13,7 +29,10 @@ const Navbar = () => {
           <div className="bg-base-100 ">
             <div className="navbar mx-auto px-4 md:px-11 mt-2">
               <div className="flex-1">
-                <NavLink to={"/"} className=" text-3xl md:text-4xl font-bold cursor-pointer">
+                <NavLink
+                  to={"/"}
+                  className=" text-3xl md:text-4xl font-bold cursor-pointer"
+                >
                   <span className="text-[#22A7F0]">Step</span>Next.
                 </NavLink>
               </div>
@@ -25,10 +44,22 @@ const Navbar = () => {
                 <div className="hidden md:block">
                   <div className="flex justify-center items-center gap-6">
                     <NavLink>Skill - Eco System</NavLink>
-                    <NavLink>Sign In / Create Account</NavLink>
+                    {currentUser ? (
+                      <ProfileDropdown />
+                    ) : (
+                      <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="hover:text-black/60 transition-colors cursor-pointer"
+                      >
+                        Sign In / Create Account
+                      </button>
+                    )}
                   </div>
                 </div>
-                <label htmlFor="my-drawer-5" className="cursor-pointer text-black/50 ">
+                <label
+                  htmlFor="my-drawer-5"
+                  className="cursor-pointer text-black/50 "
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -63,13 +94,35 @@ const Navbar = () => {
             </label>
 
             <div className="flex flex-col ">
-              <NavLink
-                className={
-                  "mx-auto font-semibold text-[16px] hover:bg-indigo-500/10 px-6 py-2 rounded-full"
-                }
-              >
-                Sign In / Create Account
-              </NavLink>
+              {currentUser ? (
+                <>
+                  <NavLink
+                    to="/profile"
+                    className={
+                      "mx-auto font-semibold text-[16px] hover:bg-indigo-500/10 px-6 py-2 rounded-full"
+                    }
+                  >
+                    Profile
+                  </NavLink>
+                  <button
+                    onClick={handleSignOut}
+                    className={
+                      "mx-auto font-semibold text-[16px] hover:bg-indigo-500/10 px-6 py-2 rounded-full cursor-pointer"
+                    }
+                  >
+                    Sign Out
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setIsModalOpen(true)}
+                  className={
+                    "mx-auto font-semibold text-[16px] hover:bg-indigo-500/10 px-6 py-2 rounded-full cursor-pointer"
+                  }
+                >
+                  Sign In / Create Account
+                </button>
+              )}
               <div className="p-4">
                 <div className="border-t-2  border-t-black/10 w-full flex flex-col items-end py-4 gap-y-4">
                   <NavLink className={"font-semibold text-lg text-black/60"}>
