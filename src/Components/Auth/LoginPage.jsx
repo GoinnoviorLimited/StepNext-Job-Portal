@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
+import { saveUser } from "../../api/resumeApi";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -35,7 +36,18 @@ const LoginPage = () => {
     try {
       setError("");
       setLoading(true);
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
+      
+      // Sync user to backend
+      if (result?.user) {
+        await saveUser({
+            fullName: result.user.displayName || "Google User",
+            email: result.user.email,
+            phone: result.user.phoneNumber || "",
+            location: ""
+          });
+      }
+
       navigate("/");
     } catch (err) {
       console.error("Google Sign-In Error:", err);
