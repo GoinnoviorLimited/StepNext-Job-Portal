@@ -35,12 +35,12 @@ const SignUpPage = () => {
       await signup(email, password);
       navigate("/");
     } catch (err) {
+      console.error("Signup Error:", err);
       if (err.code === "auth/email-already-in-use") {
         setError("Email already in use");
       } else {
-        setError("Failed to create account");
+        setError(err.message || "Failed to create account");
       }
-      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -53,8 +53,8 @@ const SignUpPage = () => {
       await signInWithGoogle();
       navigate("/");
     } catch (err) {
-      setError("Failed to sign up with Google");
-      console.error(err);
+      console.error("Google Signup Error:", err);
+      setError(err.message || "Failed to sign up with Google");
     } finally {
       setLoading(false);
     }

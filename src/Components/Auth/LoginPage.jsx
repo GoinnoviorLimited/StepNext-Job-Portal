@@ -24,8 +24,8 @@ const LoginPage = () => {
       await login(email, password);
       navigate("/");
     } catch (err) {
-      setError("Failed to sign in. Please check your credentials.");
-      console.error(err);
+      console.error("Login Error:", err);
+      setError(err.message || "Failed to sign in. Please check your credentials.");
     } finally {
       setLoading(false);
     }
@@ -38,8 +38,14 @@ const LoginPage = () => {
       await signInWithGoogle();
       navigate("/");
     } catch (err) {
-      setError("Failed to sign in with Google");
-      console.error(err);
+      console.error("Google Sign-In Error:", err);
+      if (err.code === "auth/popup-closed-by-user") {
+        setError("Sign-in popup was closed before completion.");
+      } else if (err.code === "auth/cancelled-popup-request") {
+        setError("Multiple popups opened. Please try again.");
+      } else {
+        setError(err.message || "Failed to sign in with Google");
+      }
     } finally {
       setLoading(false);
     }
