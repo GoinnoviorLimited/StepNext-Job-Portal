@@ -1,6 +1,9 @@
+
+
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { useAuth } from "../../contexts/AuthContext";
+import { saveUser } from "../../api/resumeApi";
 
 const SignUpPage = () => {
   const [email, setEmail] = useState("");
@@ -33,6 +36,16 @@ const SignUpPage = () => {
       setError("");
       setLoading(true);
       await signup(email, password);
+      
+      // Save user to backend
+      /* eslint-disable */
+      await saveUser({
+        fullName: `${firstName} ${lastName}`.trim(),
+        email: email,
+        phone: phoneNumber,
+        location: location
+      });
+
       navigate("/");
     } catch (err) {
       console.error("Signup Error:", err);
@@ -50,7 +63,18 @@ const SignUpPage = () => {
     try {
       setError("");
       setLoading(true);
-      await signInWithGoogle();
+      const result = await signInWithGoogle();
+      
+      // Save user to backend (using Google info if possible)
+      if (result?.user) {
+        await saveUser({
+            fullName: result.user.displayName || "Google User",
+            email: result.user.email,
+            phone: result.user.phoneNumber || "",
+            location: ""
+          });
+      }
+
       navigate("/");
     } catch (err) {
       console.error("Google Signup Error:", err);
