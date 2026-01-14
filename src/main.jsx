@@ -10,6 +10,7 @@ import ResumeForm from "./Components/CreateResume/ResumeForm.jsx";
 import LoginPage from "./Components/Auth/LoginPage.jsx";
 import SignUpPage from "./Components/Auth/SignUpPage.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
+import TemplateSelection from "./Components/CreateResume/TemplateSelection.jsx";
 
 const router = createBrowserRouter([
   {
@@ -33,8 +34,13 @@ const router = createBrowserRouter([
         path: "/signup",
         Component: SignUpPage,
       },
+      {
+        path: "/templates",
+        Component: TemplateSelection,
+      },
     ],
   },
+  
 ]);
 
 createRoot(document.getElementById("root")).render(
