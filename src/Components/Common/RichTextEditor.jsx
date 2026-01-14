@@ -13,11 +13,86 @@ import {
 /**
  * A sleek, TipTap-based rich text editor.
  */
+const MenuBar = ({ editor }) => {
+  if (!editor) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2 p-2 border-b bg-gray-50 rounded-t-lg">
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().toggleBold().run()}
+        className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('bold') ? 'bg-sky-100 text-sky-600' : 'text-gray-600'}`}
+        title="Bold"
+      >
+        <FaBold size={14} />
+      </button>
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().toggleItalic().run()}
+        className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('italic') ? 'bg-sky-100 text-sky-600' : 'text-gray-600'}`}
+        title="Italic"
+      >
+        <FaItalic size={14} />
+      </button>
+      
+      <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().toggleBulletList().run()}
+        className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('bulletList') ? 'bg-sky-100 text-sky-600' : 'text-gray-600'}`}
+        title="Bullet List"
+      >
+        <FaListUl size={14} />
+      </button>
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().toggleOrderedList().run()}
+        className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('orderedList') ? 'bg-sky-100 text-sky-600' : 'text-gray-600'}`}
+        title="Numbered List"
+      >
+        <FaListOl size={14} />
+      </button>
+
+      <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
+        className="p-2 rounded hover:bg-gray-200 text-gray-600 title='Clear Formatting'"
+      >
+        <FaRemoveFormat size={14} />
+      </button>
+
+      <div className="flex-grow" />
+
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().undo().run()}
+        disabled={!editor.can().undo()}
+        className="p-2 rounded hover:bg-gray-200 text-gray-400 disabled:opacity-30"
+      >
+        <FaUndo size={14} />
+      </button>
+      <button
+        type="button"
+        onClick={() => editor.chain().focus().redo().run()}
+        disabled={!editor.can().redo()}
+        className="p-2 rounded hover:bg-gray-200 text-gray-400 disabled:opacity-30"
+      >
+        <FaRedo size={14} />
+      </button>
+    </div>
+  );
+};
+
 const RichTextEditor = ({ value, onChange, placeholder }) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        // Ensure paragraphs are handled cleanly
+        
         paragraph: {
           HTMLAttributes: {
             class: 'mb-1',
@@ -40,80 +115,10 @@ const RichTextEditor = ({ value, onChange, placeholder }) => {
     return null;
   }
 
-  const MenuBar = () => {
-    return (
-      <div className="flex flex-wrap gap-2 p-2 border-b bg-gray-50 rounded-t-lg">
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleBold().run()}
-          className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('bold') ? 'bg-sky-100 text-sky-600' : 'text-gray-600'}`}
-          title="Bold"
-        >
-          <FaBold size={14} />
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleItalic().run()}
-          className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('italic') ? 'bg-sky-100 text-sky-600' : 'text-gray-600'}`}
-          title="Italic"
-        >
-          <FaItalic size={14} />
-        </button>
-        
-        <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
-
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleBulletList().run()}
-          className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('bulletList') ? 'bg-sky-100 text-sky-600' : 'text-gray-600'}`}
-          title="Bullet List"
-        >
-          <FaListUl size={14} />
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().toggleOrderedList().run()}
-          className={`p-2 rounded hover:bg-gray-200 transition-colors ${editor.isActive('orderedList') ? 'bg-sky-100 text-sky-600' : 'text-gray-600'}`}
-          title="Numbered List"
-        >
-          <FaListOl size={14} />
-        </button>
-
-        <div className="w-px h-6 bg-gray-300 mx-1 self-center" />
-
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().unsetAllMarks().clearNodes().run()}
-          className="p-2 rounded hover:bg-gray-200 text-gray-600 title='Clear Formatting'"
-        >
-          <FaRemoveFormat size={14} />
-        </button>
-
-        <div className="flex-grow" />
-
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().undo().run()}
-          disabled={!editor.can().undo()}
-          className="p-2 rounded hover:bg-gray-200 text-gray-400 disabled:opacity-30"
-        >
-          <FaUndo size={14} />
-        </button>
-        <button
-          type="button"
-          onClick={() => editor.chain().focus().redo().run()}
-          disabled={!editor.can().redo()}
-          className="p-2 rounded hover:bg-gray-200 text-gray-400 disabled:opacity-30"
-        >
-          <FaRedo size={14} />
-        </button>
-      </div>
-    );
-  };
 
   return (
-    <div className="border rounded-lg bg-white overflow-hidden focus-within:ring-2 focus-within:ring-sky-500/20 focus-within:border-sky-500 transition-all">
-      <MenuBar />
+    <div className="relative border rounded-lg bg-white overflow-hidden focus-within:ring-2 focus-within:ring-sky-500/20 focus-within:border-sky-500 transition-all">
+      <MenuBar editor={editor} />
       <EditorContent editor={editor} />
       {editor.isEmpty && placeholder && (
         <div className="absolute top-[52px] left-4 text-gray-400 pointer-events-none text-sm italic">
