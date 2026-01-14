@@ -11,6 +11,7 @@ import LoginPage from "./Components/Auth/LoginPage.jsx";
 import SignUpPage from "./Components/Auth/SignUpPage.jsx";
 import { AuthProvider } from "./contexts/AuthContext.jsx";
 import TemplateSelection from "./Components/CreateResume/TemplateSelection.jsx";
+import Profile from "./Components/Profile/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: "/templates",
         Component: TemplateSelection,
+      },
+      {
+        path: "/profile",
+        Component: Profile,
       },
     ],
   },
