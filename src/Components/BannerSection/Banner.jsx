@@ -55,7 +55,7 @@ const Banner = () => {
         </div>
       </div>
       <div className="md:hidden">
-        <div className="text-center md:w-full px-4 w-100 mx-auto -mt-15">
+        <div className="text-center w-full px-4 mx-auto -mt-15">
           <h2 className="text-xl font-bold mb-2">
             Already have a resume? Create/Get your Industry/Corporate Standard
             CV/Resume through StepNext.
