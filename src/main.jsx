@@ -7,7 +7,11 @@ import Root from "./Layouts/Root/Root.jsx";
 import Home from "./Components/Home/Home.jsx";
 import ResumeBuilder from "./Components/ResumeBuilder/ResumeBuilder.jsx";
 import ResumeForm from "./Components/CreateResume/ResumeForm.jsx";
-import Templates from "./Components/Resume/ViewTemplates/Templates.jsx";
+import LoginPage from "./Components/Auth/LoginPage.jsx";
+import SignUpPage from "./Components/Auth/SignUpPage.jsx";
+import { AuthProvider } from "./contexts/AuthContext.jsx";
+import TemplateSelection from "./Components/CreateResume/TemplateSelection.jsx";
+import Profile from "./Components/Profile/Profile.jsx";
 
 const router = createBrowserRouter([
   {
@@ -24,15 +28,30 @@ const router = createBrowserRouter([
         Component: ResumeForm,
       },
       {
-        path: "templates",
-        Component: Templates,
+        path: "/login",
+        Component: LoginPage,
+      },
+      {
+        path: "/signup",
+        Component: SignUpPage,
+      },
+      {
+        path: "/templates",
+        Component: TemplateSelection,
+      },
+      {
+        path: "/profile",
+        Component: Profile,
       },
     ],
   },
+  
 ]);
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>
 );

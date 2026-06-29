@@ -163,7 +163,7 @@ const ResumeForm = () => {
 
   return (
     <div>
-      <div className="max-w-5xl mx-auto p-6  md:shadow-[0_2px_8px_rgba(0,0,0,0.08)] rounded-xl my-8">
+      <div className="max-w-5xl mx-auto p-4 md:p-10 md:shadow-[0_2px_15px_rgba(0,0,0,0.1)] rounded-2xl my-4 md:my-12 bg-white">
         <button
           className="text-md flex justify-center items-center gap-2 cursor-pointer text-black/60 hover:text-black/30"
           onClick={() => {
@@ -175,26 +175,26 @@ const ResumeForm = () => {
           </span>
           <span>Back to options</span>
         </button>
-        <h1 className="text-3xl font-bold my-6">Create Your Resume</h1>
+        <h1 className="text-2xl md:text-4xl font-extrabold my-4 md:my-8 text-gray-900 tracking-tight">Create Your Resume</h1>
 
         {/* Tabs */}
-        <div className="tabs tabs-boxed mb-6 grid grid-cols-4 lg:grid-cols-8 gap-2 items-center">
+        <div className="flex flex-wrap gap-2 mb-8 bg-gray-50 p-2 rounded-xl border border-gray-100">
           {tabs.map((t, index) => (
             <button
               key={t}
               onClick={() => handleTabClick(t, index)}
-              className={`text-xs py-2 transition-all ${
+              className={`text-[10px] md:text-xs px-3 py-2 transition-all font-semibold uppercase tracking-wider ${
                 activeTab === t
-                  ? "bg-[#22A7F0] rounded-md text-white cursor-pointer shadow-sm"
+                  ? "bg-[#22A7F0] rounded-lg text-white cursor-pointer shadow-md"
                   : index <= unlockedIdx
-                  ? "bg-[#22A7F0]/20 rounded-md text-black/80 cursor-pointer hover:bg-[#22A7F0]/30"
-                  : "bg-gray-100 rounded-md text-black/30 cursor-not-allowed opacity-60"
+                  ? "bg-white text-gray-600 rounded-lg cursor-pointer hover:bg-gray-100 border border-gray-200"
+                  : "bg-transparent text-gray-300 rounded-lg cursor-not-allowed opacity-60"
               }`}
             >
               {t}
             </button>
           ))}
-          <button
+            <button
             onClick={() => {
               const sectionName = prompt("Enter Custom Section Name:");
               if (sectionName && !tabs.includes(sectionName)) {
@@ -209,9 +209,10 @@ const ResumeForm = () => {
                 setUnlockedIdx(newTabs.indexOf(sectionName));
               }
             }}
-            className="text-xs py-2 bg-green-100 text-green-700 rounded-md hover:bg-green-200 transition-all font-semibold"
+            className="text-[10px] md:text-xs px-3 py-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition-all font-bold border border-green-100 flex items-center gap-1"
           >
-            + Add Custom
+            <span className="text-sm">+</span>
+            <span>Add Custom</span>
           </button>
         </div>
 

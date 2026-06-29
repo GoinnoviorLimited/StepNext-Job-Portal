@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
+import MonthYearPicker from "../Common/MonthYearPicker";
 
 const Certifications = ({ data = [], onSave, onValidityChange, onSubmitRef }) => {
   const {
@@ -139,10 +140,16 @@ const Certifications = ({ data = [], onSave, onValidityChange, onSubmitRef }) =>
                   <label className="label">
                     <span className="label-text font-medium">Date Obtained</span>
                   </label>
-                  <input
-                    placeholder="MM/YYYY"
-                    className="input focus:outline-none w-full"
-                    {...register(`certifications.${index}.date`)}
+                  <Controller
+                    name={`certifications.${index}.date`}
+                    control={control}
+                    render={({ field }) => (
+                      <MonthYearPicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Select date"
+                      />
+                    )}
                   />
                 </div>
               </div>

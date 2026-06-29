@@ -26,7 +26,7 @@ const Preview = ({ initialData, onSaveResume, onDataUpdate }) => {
         const success = await onSaveResume(true);
         if (!success) {
           setIsDownloading(false);
-          return; // Stop if saving failed (e.g. no email)
+          return; 
         }
       }
       const timestamp = Date.now();
@@ -66,11 +66,11 @@ const Preview = ({ initialData, onSaveResume, onDataUpdate }) => {
 
       console.log("PDF download initiated successfully");
 
-      // Cleanup
+      
       setTimeout(() => {
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
-        setIsDownloading(false); // Reset loading state
+        setIsDownloading(false); // Reseting  loading state
       }, 100);
     } catch (err) {
       setIsDownloading(false);
@@ -109,22 +109,22 @@ const Preview = ({ initialData, onSaveResume, onDataUpdate }) => {
   return (
     <div className="space-y-6" onClick={(e) => e.stopPropagation()}>
       {/* TOP BAR */}
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
-          <h2 className="text-2xl font-bold">Preview & Download</h2>
-          <p className="text-gray-600 mt-1">
+          <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900">Preview & Download</h2>
+          <p className="text-sm md:text-base text-gray-600 mt-1">
             Review your resume before downloading
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full md:w-auto">
           <button
             onClick={handleEnhance}
             disabled={isEnhancing}
-            className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-2 shadow-sm ${
+            className={`px-4 py-2.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-sm font-bold text-sm cursor-pointer ${
               isEnhancing
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100"
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+                : "bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 active:scale-95"
             }`}
           >
             {isEnhancing ? (
@@ -135,7 +135,7 @@ const Preview = ({ initialData, onSaveResume, onDataUpdate }) => {
             ) : (
               <FaMagic className="text-purple-500" />
             )}
-            {isEnhancing ? "Enhancing..." : "Enhance with AI"}
+            <span className="whitespace-nowrap">{isEnhancing ? "Enhancing..." : "Enhance with AI"}</span>
           </button>
 
           <button
@@ -143,7 +143,7 @@ const Preview = ({ initialData, onSaveResume, onDataUpdate }) => {
             e.stopPropagation();
             navigate("/templates");
           }}
-          className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+          className="px-4 py-2.5 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-all flex items-center justify-center gap-2 font-bold shadow-sm text-sm active:scale-95 cursor-pointer"
         >
           <svg
             className="w-4 h-4"
@@ -158,17 +158,17 @@ const Preview = ({ initialData, onSaveResume, onDataUpdate }) => {
               d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
             />
           </svg>
-          Change Template
+          <span className="whitespace-nowrap">Change Template</span>
         </button>
         </div>
       </div>
 
       {/* A4 PAGE PREVIEW */}
-      <div className="bg-gray-50 p-8 flex justify-center rounded-lg">
-        <div className="relative">
+      <div className="bg-gray-100 p-2 sm:p-4 md:p-8 flex justify-center rounded-xl border border-gray-200 overflow-hidden">
+        <div className="relative origin-top transition-all duration-300 w-[210mm] scale-[0.4] mb-[-178mm] sm:scale-[0.6] sm:mb-[-119mm] md:scale-[0.8] md:mb-[-59mm] lg:scale-100 lg:mb-0">
           <div
             id="element-to-print"
-            className="bg-white w-[210mm] min-h-[297mm] p-10 shadow-lg rounded"
+            className="bg-white w-[210mm] min-h-[297mm] p-10 shadow-2xl rounded-sm"
             onClick={(e) => e.stopPropagation()}
           >
             <ClassicTemplate data={data} />
@@ -181,7 +181,7 @@ const Preview = ({ initialData, onSaveResume, onDataUpdate }) => {
             </div>
           </div>
 
-          <div className="absolute -bottom-6 left-0 right-0 text-center text-sm text-gray-500">
+          <div className="hidden md:block absolute -bottom-8 left-0 right-0 text-center text-sm font-medium text-gray-500">
             This is how your PDF will look
           </div>
         </div>
@@ -195,10 +195,10 @@ const Preview = ({ initialData, onSaveResume, onDataUpdate }) => {
           type="button"
           onClick={downloadPDF}
           disabled={isDownloading}
-          className={`cursor-pointer px-8 py-3 rounded-lg transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg  ${
+          className={`cursor-pointer w-full sm:w-auto px-8 py-3.5 rounded-xl transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg font-bold ${
             isDownloading
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-red-600 hover:bg-red-700 text-white"
+              : "bg-red-600 hover:bg-red-700 text-white active:scale-95"
           }`}
         >
           {isDownloading ? (
